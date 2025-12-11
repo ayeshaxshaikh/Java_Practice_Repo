@@ -1,0 +1,101 @@
+
+// class Demo {
+//     public static void main(String args[]) {
+//         int num = 89;
+//         float f = 8.9f;
+//         double d = 7.4;
+//         char c = 'A';
+//         long l = 34567;
+//         System.out.println(num + " " + f + " " + d + " " + c + " " + l);
+//         show();
+//     }
+
+//     public static void show() {
+//         System.out.println("Hey there");
+//     }
+// }
+
+
+
+// class Keyboard {
+//     int keys;
+//     String colors;
+//     static String brand;
+
+//     public static void pressed(){
+//         System.out.println("Key Pressed");
+//     }
+
+//     public static void throwIt(){
+//         System.out.println("Throw this away");
+//     }
+// }
+
+// class AdvKeyboard extends Keyboard {
+//     public static void hitBoard() {
+//         System.out.println("Borad hitted");
+//     }
+// }
+
+// class Demo {
+//     public static void main(String[] args) {
+//         // Keyboard obj = new Keyboard();
+//         AdvKeyboard obj;
+//         obj = new AdvKeyboard();
+//         obj.pressed();
+//         obj.throwIt();
+//         obj.hitBoard();
+
+//         System.out.println(obj.keys);
+//         System.out.println(obj.colors);
+//         System.out.println(Keyboard.brand);
+//     }
+// }
+
+class Students extends Object {
+    int rollNo;
+    String name;
+
+    // constructor — no return type
+    Students(int rollNo, String name) {
+        this.rollNo = rollNo;
+        this.name = name;
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        String s = "AYESHA";
+        // System.out.println(s);
+
+        StringBuffer str = new StringBuffer("Ayesha ");
+        str.append("Junaid");
+        // System.out.println(str);
+
+        int nums[] = new int[8];
+        nums[0] = 8;
+        nums[1] = 9;
+
+
+        int values[] = {3, 4, 5};
+
+        // for (int i = 0; i < values.length; i++) {
+        //     System.out.println(values[i]);
+        // }
+
+        // for (int num : values) {
+        //     System.out.println(num);
+        // }
+
+
+        Students students[] = new Students[3];
+        students[0] = new Students(1, "Kevin");
+        students[1] = new Students(2, "Vincent");
+        students[2] = new Students(3, "Aditya");
+
+        for (var student : students) {
+            System.out.println(student);
+        }
+    }
+}
