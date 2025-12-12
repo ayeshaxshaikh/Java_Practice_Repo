@@ -52,50 +52,61 @@
 //     }
 // }
 
-class Students extends Object {
-    int rollNo;
-    String name;
+// class Students extends Object {
+//     int rollNo;
+//     String name;
 
-    // constructor — no return type
-    Students(int rollNo, String name) {
-        this.rollNo = rollNo;
-        this.name = name;
-    }
-}
+//     // constructor — no return type
+//     Students(int rollNo, String name) {
+//         this.rollNo = rollNo;
+//         this.name = name;
+//     }
+// }
 
 
-public class Main {
+// public class Main {
+//     public static void main(String[] args) {
+//         String s = "AYESHA";
+//         // System.out.println(s);
+
+//         StringBuffer str = new StringBuffer("Ayesha ");
+//         str.append("Junaid");
+//         // System.out.println(str);
+
+//         int nums[] = new int[8];
+//         nums[0] = 8;
+//         nums[1] = 9;
+
+
+//         int values[] = {3, 4, 5};
+
+//         // for (int i = 0; i < values.length; i++) {
+//         //     System.out.println(values[i]);
+//         // }
+
+//         // for (int num : values) {
+//         //     System.out.println(num);
+//         // }
+
+
+//         Students students[] = new Students[3];
+//         students[0] = new Students(1, "Kevin");
+//         students[1] = new Students(2, "Vincent");
+//         students[2] = new Students(3, "Aditya");
+
+//         for (var student : students) {
+//             System.out.println(student);
+//         }
+//     }
+// }
+
+
+class Test {
     public static void main(String[] args) {
-        String s = "AYESHA";
-        // System.out.println(s);
-
-        StringBuffer str = new StringBuffer("Ayesha ");
-        str.append("Junaid");
-        // System.out.println(str);
-
-        int nums[] = new int[8];
-        nums[0] = 8;
-        nums[1] = 9;
-
-
-        int values[] = {3, 4, 5};
-
-        // for (int i = 0; i < values.length; i++) {
-        //     System.out.println(values[i]);
-        // }
-
-        // for (int num : values) {
-        //     System.out.println(num);
-        // }
-
-
-        Students students[] = new Students[3];
-        students[0] = new Students(1, "Kevin");
-        students[1] = new Students(2, "Vincent");
-        students[2] = new Students(3, "Aditya");
-
-        for (var student : students) {
-            System.out.println(student);
+        String[] s = {"X", "Y", "Z"};
+        args = s;
+        for (String s1: args) {
+            System.out.println(s1);
         }
     }
 }
