@@ -101,12 +101,12 @@
 // }
 
 
-class Test {
-    public static void main(String[] args) {
-        String[] s = {"X", "Y", "Z"};
-        args = s;
-        for (String s1: args) {
-            System.out.println(s1);
-        }
-    }
-}
+// class Test {
+//     public static void main(String[] args) {
+//         String[] s = {"X", "Y", "Z"};
+//         args = s;
+//         for (String s1: args) {
+//             System.out.println(s1);
+//         }
+//     }
+// }
