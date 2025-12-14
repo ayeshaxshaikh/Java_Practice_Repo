@@ -147,3 +147,147 @@ Sopln(Float.NaN != Float.NaN); true
 It is a runtime exception but not compile time error.
 It is possible only in integral arithmetic but not in floating-point arithmetic.
 The only operators which cause Arithmetic Exception are / and %.
+
+# String Concatenation Operator(+):
+The only over loaded operator in Java is + operator. Sometimes it acts as arithmetic addition operator and sometimes it acts as string concatenation operator.
+If at least one argument is string type then + operator acts as concatenation operator and if both arguments are number type then + operator acts as arithmetic addition operator. 
+
+e.g.
+String a = "love";
+int b = 10, c = 20, d = 30;
+Sopln(a + b + c + d); // love102030
+Sopln(b + c + d + a); // 60love
+Sopln(b + c + a + d); // 30love30
+Sopln(b + a + c + d); // 10love2030
+
+a = b + c + d; ❌
+a = a + b + c; ✅
+b = a + c + d; ❌
+b = b + c + d; ✅
+
+# Relational Operators (<, <=, >, >=):
+We can apply relational operators for every primitive type except boolean.
+We can't apply relational operators for object types.
+e.g. Sopln("love123" > "love"); // ❌
+Listing of relational operators is not allowed otherwise we will get compile time error.
+e.g. Sopln(10 < 20 < 30); // CE
+
+# Equality Operator (==, !=):
+We can apply equality operators for every primitive type including boolean type also.
+We can apply equality operators for object types also. For object references r1 and r2
+r1 == r2 returns true if and only if both references pointing to the same object(reference comparisons are address comparison).
+Sopln(10 == 20); // false
+Sopln('a' == 'b'); // false
+Sopln('a' == 97.0); // true
+Sopln(false == false); // true
+
+e.g.
+Thread t1 = new Thread();
+Thread t2 = new Thread();
+Thread t3 = t1;
+Sopln(t1 == t2); // false
+Sopln(t1 == t3); // true
+
+If we apply equality operators for objects types then compulsory there should be some relation between argument types either child to parent or parent to child or same type. Otherwise we will compile time error saying incomparable types.
+e.g.
+Thread t = new Thread();
+Object o = new Object();
+String s = new String();
+Sopln(t == o); // false
+Sopln(o == s); // false
+Sopln(s == t); // CE
+ 
+# Difference between == and .equals() method
+In general we can use == for reference comparison (address comparison) and .equals() method for content comparison.
+String s1 = new String("love");
+String s2 = new String("love");
+Sopln(s1 == s2); // false
+Sopln(s1.equals(s2)); // true
+
+# NOTE: For any object reference r, r == null is always false but null == null is always true
+
+# instanceof operator:
+We can use instanceof operator to check whether the given object is of particular type or not.
+Syntax:
+r instanceof x
+r = object reference
+x = class / interface name
+e.g.
+Thread t = new Thread();
+Sopln(t intanceof Thread); // true
+Sopln(t intanceof Object); // true
+Sopln(t intanceof Runnable); // true
+
+To use instanceof operator compulsory there is should be some relation between argument types (either parent to child or child to parent or same type) otherwise we will get compile time error saying inconvertable types.
+
+Sopln(t instanceof String); // CE
+
+For any class or interface x, null instance of x is always false.
+Sopln(null instanceof Thread); false
+Sopln(null instanceof Runnable); false
+
+# Bit wise operators (&, |, ^):
+& => Returns true if both arguments are true.
+| => Returns true if at least one argument is true.
+^ => Returns true if both arguments are different.
+e.g.
+Sopln(true & false); // false
+Sopln(true | false); // true
+Sopln(true ^ false); // true
+
+We can apply these operators for integral types also.
+Sopln(4 & 5); // 4
+Sopln(4 | 5); // 5
+Sopln(4 ^ 5); // 1
+
+# Bit wise complement Operator (~):
+We can apply this operator only for integral type but not for boolean type. If we are trying to apply for boolean type then we will get compile time error.
+Sopln(~true); // CE
+Sopln(~4); // -5
+
+# Boolean complement operator (!):
+We can apply this operator only for boolean types but not for integral types.
+Sopln(!4); // CE
+Sopln(!false); // true
+
+# Short-Circuit Operators (&&, ||):
+These are exactly same as bit wise operators (& , |) excepts the following differences:
+&, |                                              |      &&, ||
+-------------------------------------------------------------------------------------------------------------------
+1. both arguments checks                              second argument evaluation is optional
+2. Relatively performance is low                      Relatively performance is high
+3. Applicable for both boolean and integral types     Applicable only for boolean type but not for integral types
+
+# NOTE: 
+x && y => y will be evaluated if x is true. 
+x || y => y will be evaluated if x is false.
+
+# Type-cast operators:
+There are two types of type-casting
+1. Implicit Type-casting
+2. Explicit Type-casting
+
+1. Implicit Type-casting:
+Compiler is responsible to perform implicit type-casting.
+Whenever we are assigning smaller data type value to bigger data type variable, implicit type-casting will be performed.
+It is also known as widening or upcasting.
+There is no loss of information in this type-casting.
+e.g.
+int x = 'a';
+Sopln(x); // 97
+
+double d = 10;
+Sopln(d); // 10.0
+
+
+2. Explicit Type-casting:
+Programmer is responsible to perform explicit type-casting.
+Whenever we are assigning bigger data type value to smaller data type variable, explicit type-casting is required.
+It is also known as narrowing or down-casting.
+There may be a chance of loss of information in this type-casting.
+e.g.
+int x = 130;
+byte b = (byte)x;
+Sopln(b); // -126
+
+Whenever we are assigning bigger data type value to smaller data type variable by explicit type-casting, the most significant bits will be lost we have to consider only least significant bits
