@@ -291,3 +291,132 @@ byte b = (byte)x;
 Sopln(b); // -126
 
 Whenever we are assigning bigger data type value to smaller data type variable by explicit type-casting, the most significant bits will be lost we have to consider only least significant bits
+
+# Assignment Operator:
+There are 3 types of assignment operators:
+1. Simple Assignment - 
+int x = 10;
+
+2. Chained Assignment -
+int a, b, c, d;
+a = b = c = d = 20;
+Sopln(a + " " + b + " " + c + " " + d); // 20 20 20 20
+int a = b = c = 10; // Compile time error
+We can't perform chained assignment directly at the time of declaration.
+
+e.g.
+int b, c, d;
+int a = b = c = d = 40; ✅
+
+3. Compound Assignment - 
+Sometimes assignment operator mixed with some other operator such type of assignment operators are called compound assignment operators.
+e.g.
+int a = 10;
+a += 20;
+Sopln(a); // 30
+
+The following are all possible compound operators in Java:
++=, -=, *=, /=, %=
+&=, |=, ^=
+>>=, >>>=, <<=
+
+e.g.
+byte b = 10;
+b += 1; // b = (byte)(b+1)
+Sopln(b); // 11
+In the case of compound assignment operators, internal type-casting will be performed automatically.
+
+# Conditional Operator (?:):
+int x = (10 > 20) ? 30 : ((40 > 50) ? 60 : 70);
+Sopln(x); // 70
+
+# new Operator:
+We can use new operator to create object.
+e.g. 
+Test t = new Test();
+# NOTE: After creating an object constructor will be executed to perform initialization of an object hence constructor is not for creation of an object and it is for initialization of an object.
+
+In Java we have only new keyword but not delete keyword because destruction of useless object is the responsibility of garbage collector.
+
+
+# [ ] operator:
+We can use this operator to declare and create arrays.
+int[] x = new int[10];
+
+# Operator Precedence:
+1. Unary Operators:
+[], x++, x--
+++x, --x, ~, !
+new, <type>
+
+2. Arithmetic Operators:
+*, /, %
++, -
+
+3. Shift Operators:
+>>, >>>, <<
+
+4. Comparison Operators:
+<, <=, >, >=, instanceof
+
+5. Equality Operators:
+==, !=
+
+6. Bitwise Operators:
+&, ^, |
+
+7. Short circuit operator:
+&&, ||
+
+8. Conditional Operator:
+?:
+
+9. Assignment operators:
+=, +=, -=, *=, ....
+
+# new vs newInstance():
+We can use new operator to create an object if we know the class name at the begining.
+e.g.
+Test t = new Test();
+Student t = new Student(); 
+
+newInstance() is a method present in Class. We can use newInstance() to create object if we don't know class name at the begining and it is available dynamically at runtime.
+e.g.
+class Test {
+    public static void main(String[] args) throws Exception {
+        Object o = Class.forName(args[0]).newInstance();
+        System.out.println(o.getClass().getName());
+    }
+}
+
+In the case of new operator based on our requirement we can invoke any constructor.
+But newInstance() internally calls no-argument constructor. Hence to use newInstance() method the corresponding class should  contain no-argument constructor otherwise we will get runtime exception saying InstantiationException
+
+# ClassNotFoundException Vs NoClassDefFoundError:
+For hardcoded class names, at runtime if the corresponding .class file is not avaialbe then we will get runtime exception saying NoClassDefFoundError, which is unchecked.
+e.g.
+Test t = new Test(); 
+At runtime, if Test.class file is not available then we will get runtime exception saying NoClassdefFoundError: Test
+
+For dynamically provided class names, at runtime if the corresponding .class file is not available then we will get runtime exception saying ClassNotFoundException, which is checked exception.
+e.g.
+Object o = Class.forName(args[0]).newInstance();
+Java Test Student
+At runtime, if Student.class file is not available then we will get runtime exception saying ClassNotFoundException: Student
+
+# instanceof vs isInstance():
+instanceof is an operator in Java. We can use instanceof to check whether the given object is of particular type or not and we know the type at the begining.
+Thread t = new Thread();
+Sopln(t instanceof Runnable);
+Sopln(t instanceof Object);
+
+isInstance() is a method present in java.lang.Class. we can use isInstance() to check whether the given object is of particular type or not and we don't know the type at the begining and it is available dynamically at runtime.
+e.g.
+class Test {
+    public static void main(String[] args) throws Exception {
+        Thread t = new Thread();
+        Sopln(Class.forName(args[0]).isInstance(t));
+    }
+}
+java Test Runnable: true
+java Test String: false
