@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 // class Demo {
 //     public static void main(String args[]) {
@@ -110,3 +111,16 @@
 //         }
 //     }
 // }
+
+
+class A {
+    public static void main(String[] args) {
+        System.out.println("A class main");
+    }
+}
+
+class Test {
+    public static void main(String[] args) {
+        ArrayList l = new ArrayList();
+    }
+}
