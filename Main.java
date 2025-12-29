@@ -113,14 +113,39 @@ import java.util.ArrayList;
 // }
 
 
-class A {
-    public static void main(String[] args) {
-        System.out.println("A class main");
+// class A {
+//     public static void main(String[] args) {
+//         System.out.println("A class main");
+//     }
+// }
+
+// class Test {
+//     public static void main(String[] args) {
+//         ArrayList l = new ArrayList();
+//     }
+// }
+
+class P
+{
+    P()
+    {
+        System.out.println(this.hashCode());
     }
 }
 
-class Test {
-    public static void main(String[] args) {
-        ArrayList l = new ArrayList();
+class C extends P
+{
+    C()
+    {
+        System.out.println(this.hashCode());
+    }
+}
+
+class Test 
+{
+    public static void main(String[] args)
+    {
+        C c = new C();
+        System.out.println(c.hashCode());
     }
 }
