@@ -141,7 +141,7 @@ class Test {
     }
 } // CE: reference to Date is ambiguous
 
-# NOTE: Even in the case of List also we may get same ambiguouty problem because it is available in both util and awt packages. 
+# NOTE: Even in the case of List also we may get same ambiguity problem because it is available in both util and awt packages. 
 
 case 5:
 -------

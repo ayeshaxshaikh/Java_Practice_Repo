@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
 // class Demo {
 //     public static void main(String args[]) {
@@ -125,27 +125,62 @@ import java.util.ArrayList;
 //     }
 // }
 
+// class P
+// {
+//     P()
+//     {
+//         System.out.println(this.hashCode());
+//     }
+// }
+
+// class C extends P
+// {
+//     C()
+//     {
+//         System.out.println(this.hashCode());
+//     }
+// }
+
+// class Test 
+// {
+//     public static void main(String[] args)
+//     {
+//         C c = new C();
+//         System.out.println(c.hashCode());
+//     }
+// }
+
 class P
 {
-    P()
+    public void m1()
     {
-        System.out.println(this.hashCode());
+        System.out.println("Parent");
     }
 }
 
 class C extends P
 {
-    C()
+    public void m2()
     {
-        System.out.println(this.hashCode());
-    }
+        System.out.println("Child");
+    }   
 }
 
 class Test 
 {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
+        P p = new P();
+        p.m1();
+        // p.m2();
+
         C c = new C();
-        System.out.println(c.hashCode());
-    }
+        c.m1();
+        c.m2();
+
+        P p1 = new C();
+        p1.m1();
+        // p1.m2();
+
+        // C c1 = new P();
+    } 
 }
