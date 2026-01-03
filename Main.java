@@ -150,37 +150,64 @@
 //     }
 // }
 
-class P
-{
-    public void m1()
-    {
-        System.out.println("Parent");
-    }
-}
+// class P
+// {
+//     public void m1()
+//     {
+//         System.out.println("Parent");
+//     }
+// }
 
-class C extends P
-{
-    public void m2()
-    {
-        System.out.println("Child");
-    }   
-}
+// class C extends P
+// {
+//     public void m2()
+//     {
+//         System.out.println("Child");
+//     }   
+// }
 
-class Test 
-{
-    public static void main(String[] args) {
-        P p = new P();
-        p.m1();
-        // p.m2();
+// class Test 
+// {
+//     public static void main(String[] args) {
+//         P p = new P();
+//         p.m1();
+//         // p.m2();
 
-        C c = new C();
-        c.m1();
-        c.m2();
+//         C c = new C();
+//         c.m1();
+//         c.m2();
 
-        P p1 = new C();
-        p1.m1();
-        // p1.m2();
+//         P p1 = new C();
+//         p1.m1();
+//         // p1.m2();
 
-        // C c1 = new P();
-    } 
-}
+//         // C c1 = new P();
+//     } 
+// }
+
+// class Test
+// {
+//     public void m1()
+//     {
+//         System.out.println("no-arg");
+//     }
+
+//     public void m1(int i)
+//     {
+//         System.out.println("int-arg");
+//     }
+
+//     public void m1(double d)
+//     {
+//         System.out.println("double-arg");
+//     }
+// }
+
+// public class Main {
+//     public static void main(String[] args) {
+//         Test t = new Test();
+//         t.m1();
+//         t.m1(10);
+//         t.m1(10.5);
+//     }
+// }
