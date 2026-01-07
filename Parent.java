@@ -12,7 +12,7 @@ class Parent
     }
 
     public static void main(String[] args) {
-        Parent t = new Parent();
+        Parent p = new Parent();
         System.out.println("parent main method");
     }
 
@@ -38,7 +38,7 @@ class Child extends Parent
     }
 
     public static void main(String[] args) {
-        Child t = new Child();
+        Child c = new Child();
         System.out.println("child main method");
     }
 

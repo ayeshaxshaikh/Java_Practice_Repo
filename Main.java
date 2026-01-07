@@ -211,3 +211,35 @@
 //         t.m1(10.5);
 //     }
 // }
+
+// class Test
+// {
+//     static int count = 0;
+
+//     {
+//         count++;
+//     }
+
+//     Test()
+//     {
+
+//     }
+
+//     Test(int i)
+//     {
+
+//     }
+
+//     Test(double d)
+//     {
+
+//     }
+
+//     public static void main(String[] args)
+//     {
+//         Test t1 = new Test();
+//         Test t2 = new Test(10);
+//         Test t3 = new Test(10.5);
+//         System.out.println("The no. of objects creaated: ", count);
+//     }
+// }
