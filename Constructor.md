@@ -348,10 +348,10 @@ class Test
 }
 
 - for constructors, inheritance and overriding concepts are not applicable but overloading concept is applicable.
-- every class in java including abstractor can contain constructors but interface cannot contain constructor.
+- every class in java including abstract class can contain constructors but interface cannot contain constructor.
 
 # Note: If parent class contains any argument constructor then while child classes we have to take special care with respect to constructors.
-# Whenever we are writing any argument constructor, it is highly recommanded to write no-arg constructor also.
+# Whenever we are writing any argument constructor, it is highly recommended to write no-arg constructor also.
 
 e.g.
 class P
@@ -395,6 +395,64 @@ BusinessDelegate
 ServiceLocator
 
 # Advantage of singleton class:
-- If several people have same requirement, then it is not recommanded to create a separate object for every requirement.
-- We have to create only one object and we can reuse the same object for every similar requirement so that performance and memory utilzation will be improved.
+- If several people have same requirement, then it is not recommended to create a separate object for every requirement.
+- We have to create only one object and we can reuse the same object for every similar requirement so that performance and memory utilization will be improved.
 - This is the central idea of singleton classes.
+
+- We can create our own singleton classes, for this we have to use private constructor and private static variable and public factory method.
+
+- approach-1:
+class Test
+{
+    private static Test t = new Test();
+    
+    private Test()
+    {
+    }
+    
+    public static Test getTest()
+    { 
+        return t;
+    }
+}
+
+Test t1 = Test.getTest();
+Test t2 = Test.getTest();
+Test t1lakh = Test.getTest();
+
+# Note: Runtime class is internallly implemented by this approach.
+
+- approach-2:
+class Test
+{
+    private static Test t = null;
+    
+    private Test()
+    {
+    }
+    
+    public static Test getTest()
+    { 
+        if (t == null)
+        {
+            t = new Test();
+        }
+        return t;
+    }
+}
+
+Test t1 = Test.getTest();
+Test t2 = Test.getTest();
+Test t1lakh = Test.getTest();
+
+- At any point of time, for Test class we can create only one object hence Test class is singleton class.
+- By declaring every constructor as private, we can restrict child class creation.
+e.g.
+class P
+{
+    private P()
+    {
+
+    }
+}
+- For the above class, it is impossible to create child class.
