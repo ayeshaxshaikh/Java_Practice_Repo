@@ -2,16 +2,16 @@ class Base {
     static int i = 10;
     static 
     {
-        m1();
+        // m1();
         System.out.println("First static block");
     }
 
     public static void main(String[] args) {
-        m1();
+        // m1();
         System.out.println("main method");
     }
 
-    public static void m1() 
+    public  void m1() 
     {
         System.out.println(j);
     }
