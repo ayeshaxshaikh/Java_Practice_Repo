@@ -207,3 +207,311 @@ case 4:
 # Note: In addition to try block, there may be a chance of raising an exception inside catch and finally blocks.
 
 # Note: If any statement which is not part of try block and raises an exception then it is always abnormal termination.
+
+# Methods to print Exception information:
+- Throwable class defines the following methods to print exception information:
+
+method                        printable format
+-------------------------------------------------------------------------
+1. printStackTrace()          Name of Exception: Description Stack Trace
+2. toString()                 Name of Exception: Description
+3. getMessage()               Description
+
+e.g.
+class Test
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            System.out.println(10/0);
+        }
+        catch (ArithmeticException e)
+        {
+            e.printStackTrace();  // java.lang.AE: / by zero at Test main()
+            System.out.println(e); // or  System.out.println(e.toString());    // java.lang.AE: / by zero
+            System.out.println(e.getMessage());    //   / by zero
+        }
+    }
+}
+
+- Internally default exception handler will use printStackTrace() method to print exception information to the console.
+
+
+# try with multiple catch blocks:
+- The way of handling exception is varied from exception to exception hence for every exception type it is highly recommanded to take separate catch block i.e. try with multiple catch blocks is always possible and recommanded to use.
+
+try
+{
+    Risky code
+} 
+catch (ArithmeticException e)
+{
+    perform alternative arithmetic operations
+}
+catch (SQLException e)
+{
+    use mySQL db instead of oracle db
+}
+catch (FileNotFoundException e)
+{
+    use local file instead of remote file
+}
+catch (Exception e)
+{
+    default exception handling
+}
+
+- If try with multiple catch blocks present then the order of catch block is very important. We have to take child first and then parents otherwise we will get compile time error saying Exception XXX has already been caught.
+
+e.g.
+try
+{
+    Risky code
+} 
+catch (Exception e)
+{
+    default exception handling
+} 
+catch (ArithmeticException e)
+{
+    perform alternative arithmetic operations
+} // CE: Exception java.lang.AE has already been caught
+
+e.g.
+try
+{
+    Risky code
+} 
+catch (ArithmeticException e)
+{
+    perform alternative arithmetic operations
+}
+catch (Exception e)
+{
+    default exception handling
+} // valid
+
+- We cannot declare two catch blocks for the same exception otherwise we will get compile time error.
+
+# final vs finally vs finalize() : (v.imp)
+# final :
+- final is a modifier applicable for classes, methods and variables.
+- If a class declared as final then we can't extend that class. we can't create child class for final class. Inheritance is not possible for final classes.
+- If a method is final then we can't override that method in the child class.
+- If a variable declared as final then we can't perform reassignment for that variable.
+
+# finally :
+- Finally is a block always associated with try-catch to maintain cleanup code.
+
+try
+{
+    Risky code
+}
+catch (Exception e)
+{
+    Handling code
+}
+finally
+{
+    Cleanup code
+}
+
+- The speciality of finally block is it will be executed always irrespective of whether exception is raised or not or handled or not.
+
+# finalize() :
+- finalize() is a method always invoked by garbage collector just before destroying an object to perform cleanup activities.
+- Once finalize() method completes immediately garbage collector destroy that object.
+
+# Note: finally block is responsible to perform cleanup activities related to try block. Whatever resources we opened as a part of try block will be closed inside finally block whereas finalize method is responsible to cleanup activities related to object. Whatever resources associted with object will be deallocated before destroying an object by using finalize() method.
+
+
+# various possible combination of try-catch-finally :
+- In try-catch-finally, order is important.
+- try without catch or finally is invalid.
+- catch without try is invalid.
+- finally without try is invalid.
+- for try-catch-finally blocks curly braces are mandatory.
+
+
+# throw keyword:
+- Sometimes we can create exception object explicitly and we can hand over to the jvm manually, for this we have to use throw keyword.
+e.g.
+class Test
+{
+    public static void main(String[] args)
+    {
+        throw new ArithmeticException("/ by zero");
+    }
+}
+- Hence, the main objective of throw keyword is to hand over our created exception object to the JVM manually.
+- In this case programmer creating exception object explicitly and hand over to the jvm manually.
+
+
+
+e.g.
+class Test
+{
+    public static void main(String[] args)
+    {
+        System.out.println(10/0);
+    }
+}
+
+- In this case main() method is responsible to create exception object and hand over to the jvm.
+
+# Note: Best use of throw keyword is for user defined exception or customized exceptions.
+
+case-1:
+- throw e: If e refers null then we will get NullPointerException.
+class Test
+{
+    static ArithmeticException e = new ArithmeticException();
+
+    public static void main(String[] args)
+    {
+        throw e;
+    }
+} // RE: AE
+
+class Test
+{
+    static ArithmeticException e;
+
+    public static void main(String[] args)
+    {
+        throw e;
+    }
+} // RE: NPE
+
+
+case-2:
+- After throw statement, we are not allow any statement to write directly otherwise we will get compile time error saying CE: Unreacheable Statement.
+class Test
+{
+    public static void main(String[] args)
+    {
+        System.out.println(10/0);
+        System.out.println("Hello");
+    }
+} // RE
+
+class Test
+{
+    public static void main(String[] args)
+    {
+        throw new ArithmeticException("/ by zero");
+        System.out.println("Hello");
+    }
+} // CE: Unreacheable Statement
+
+
+case-3:
+- We can use throw keyword only for throwable types. If we are trying to use for normal java objects then we will get compile time error saying incompatible types.
+
+class Test
+{
+    public static void main(String[] args)
+    {
+        throw new Test();
+    }
+} // CE: incompatible types
+
+
+class Test extends RuntimeException
+{
+    public static void main(String[] args)
+    {
+        throw new Test();
+    }
+} // RE: Exception in thread "main" Test at Test.main()
+
+
+
+# throws keyword : (v.imp)
+- In our program, If there is a possibilty of rising checked exception, then we must handle that checked exception otherwise we will get compile time error.
+
+e.g.
+import java.io.*;
+class Test
+{
+    public static void main(String[] args)
+    {
+        PrintWriter pw = new PrintWriter("abc.txt");
+        pw.println("hello");
+    }
+} // CE: unreported exception
+
+- We can handle this compile time error by using the 2 ways:
+1. by using try-catch
+2. by using throws keyword:
+- We can use throws keyword to delegate responsibility of exception handling to caller (it may be another method or JVM) then caller method is responsible to handle that exception.
+e.g.
+class Test
+{
+    public static void main(String[] args) throws InterruptedException
+    {
+        Thread.sleep(10000);
+    }
+}
+
+- Throws keyword required only for checked exception and usage of throws keyword for unchecked exception there is no use or impact.
+- Throws keyword is required only to convience compiler.
+- usage throws keyword does not prevent abnormal termination of the program.
+
+e.g.
+class Test
+{
+    public static void main(String[] args) throws InterruptedException
+    {
+        doStuff();
+    }
+    public static void doStuff() throws InterruptedException
+    {
+        doMoreStuff();
+    }
+    public static void doMoreStuff() throws InterruptedException
+    {
+        Thread.sleep(10000);
+    }
+} 
+
+- In the above program, if we remove at least one throws statement then code won't compile.
+
+# Note: It is recommanded to use try-catch over throws keyword.
+
+case-1:
+- we can use throws keyword for methods and constructors but not for classes.
+- We can use throws keyword only for throwable types not for normal java classes.
+
+e.g.
+class Test extends RuntimeException
+{
+    public static void m1() throws Test
+    {
+
+    }
+}
+
+case-2:
+class Test
+{
+    public static void main(String[] args)
+    {
+        throw new Exception();
+    }
+} // CE: unreported exception
+
+
+class Test
+{
+    public static void main(String[] args)
+    {
+        throw new Error();
+    }
+} // RE: exception in thread "main"
+
+
+case-3:
+- Within the try block if there is no chance of rising exception then we can't write catch block for that exception. Otherwise we will get compile time error.
+- But this rule is applicable only for fully checked exception.

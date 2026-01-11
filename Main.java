@@ -261,20 +261,45 @@
 //     }
 // }
 
-class Test
-{
-    public static void main(String[] args) 
-    {
-        doStuff();
-        System.out.println(10/0);
-    }
-    public static void doStuff() 
-    {
-        doMoreStuff();
-        System.out.println("Hi");
-    }
-    public static void doMoreStuff() 
-    {
-        System.out.println("Hello");
-    }
-}    
+// class Test
+// {
+//     public static void main(String[] args) 
+//     {
+//         doStuff();
+//         System.out.println(10/0);
+//     }
+//     public static void doStuff() 
+//     {
+//         doMoreStuff();
+//         System.out.println("Hi");
+//     }
+//     public static void doMoreStuff() 
+//     {
+//         System.out.println("Hello");
+//     }
+// }    
+
+// class Test
+// {
+//     public static void main(String[] args)
+//     {
+//         throw new ArithmeticException("/ by zero explicitly");
+//     }
+// }
+
+
+// class Test
+// {
+//     public static void main(String[] args) throws InterruptedException
+//     {
+//         doStuff();
+//     }
+//     public static void doStuff() throws InterruptedException
+//     {
+//         doMoreStuff();
+//     }
+//     public static void doMoreStuff() throws InterruptedException
+//     {
+//         Thread.sleep(10000);
+//     }
+// } 
