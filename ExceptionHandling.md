@@ -515,3 +515,297 @@ class Test
 case-3:
 - Within the try block if there is no chance of rising exception then we can't write catch block for that exception. Otherwise we will get compile time error.
 - But this rule is applicable only for fully checked exception.
+
+# Summary:
+- try --> to maintain risky code.
+- catch --> to maintain exception handling code.
+- finnaly --> to maintain cleanup code.
+- throw --> to hand over our created exception object to the JVM manually.
+- throws --> to delegate responsibility of exception handling to the caller.
+
+
+# various possible compile time errors in exception handling:
+- unreported exception XXX; must be caught or declared to be thrown.
+- Exception XXX has already been caught.
+- Exception XXX is never thrown in body of corresponding try statement
+- unreachable statement
+- incompatible types
+- try without catch or finally
+- catch without try
+- finally without try
+
+# customized or user defined exceptions:
+- Sometimes, to meet programing requirements, we can define our own exceptions such type of exceptions are called customized or user defined exceptions.
+
+e.g.
+class TooYoungException extends RuntimeException
+{
+    TooYoungException(String s)
+    {
+        super(s); // to make description available to default exception handler
+    }
+}
+
+class TooOldException extends RuntimeException
+{
+    TooOldException(String s)
+    { 
+        super(s);  // to make description available to default exception handler
+    }
+}
+
+class CustException extends RuntimeException
+{
+    public static void main(String[] args) {
+        int age = Integer.parseInt(args[0]);
+
+        if (age > 60)
+        {
+            throw new TooYoungException("plz wait sometime, you will get good match");
+        }
+        else if (age < 18)
+        {
+            throw new TooOldException("You are already too old to get married");
+        }
+        else
+        {
+            System.out.println("You will get match details soon in mail");
+        }
+    }
+}
+
+# Note:
+- throw keyword is best suitable for user defined or customized exception but not for predefined exception.
+- It is highly recommanded to define customized exception as unchecked. we have extends RuntimeException but not Exception.
+
+
+# Top 10 Exceptions:
+- Based on person who is rising exception, all exceptions are divided into two categories:
+1. JVM Exception
+2. Programatic Exception
+
+1. JVM Exception: 
+- The exceptions which are rised automatically by JVM, whenever a particular event occurs are called JVM exceptions.
+e.g.
+ArithmeticException, NullPointerException, etc.
+
+2. Programatic Exception:
+- The exceptions which are rised explicitly either by programmer or by API developer to indicate that something goes wrong are called Programmatic Exceptions.
+e.g.
+IllegalArgumentException
+
+# ArrayIndexOutOfBoundException:
+- It is the child class of RuntimeException and hence it is unchecked.
+- Rised automatically by JVM, whenever we are trying to access array element with out of rage index.
+
+# NullPointerException:
+- It is the child class of RuntimeException and hence it is unchecked.
+- Rised automatically by JVM, whenever we are trying to perform any operation on null.
+e.g.
+String s = null;
+Sopln(s.length()); // RE: NullPointerException
+
+# ClassCastException:
+- It is the child class of RuntimeException and hence it is unchecked.
+- Rised automatically by JVM, whenever we are trying to type cast parent object to child type.
+e.g.
+Object o = new Object();
+String s = (String)o; // RE: ClassCastException
+
+e.g.
+Object o = new String();
+String s = (String)o; // valid
+
+
+# StackOverFlowError:
+- It is the child class of Error and hence it is unchecked.
+- Rised automatically by JVM, whenever we are trying to perform recursive method call
+
+e.g.
+class Test
+{
+    public static void m1()
+    {
+        m2();
+    }
+    public static void m2()
+    {
+        m1();
+    }
+    public static void main(String[] args)
+    {
+        m1();
+    }
+} // RE: StackOverflowError
+
+# NoClassDefFoundError:
+- It is the child class of Error and hence it is unchecked.
+- Rised automatically by JVM, whenever JVM unable to find required.class file.
+
+# ExceptionInInitializerError:
+- It is the child class of Error and hence it is unchecked.
+- Rised automatically by JVM, if any exception occurs while executing static variable assignment and static blocks.
+e.g.
+class Test
+{
+    static int x = 10/0;
+} // RE: ExceptionInInitializerError caused by j.l.AE; / by zero
+
+e.g.
+class Test
+{
+    static
+    {
+        String s = null;
+        System.out.println(s.lenght());
+    }
+} // RE: ExceptionInInitializerError caused by j.l.NPE
+
+# IllegalArgumentException:
+- It is the child class of RuntimeException and hence it is unchecked.
+- Rised explicitly either by programmer or API developer to indicate that a method has been invoked with illegal argument.
+- The valid range setPriority is 1 to 10.
+
+e.g.
+Thread t = new Thread();
+t.setPriority(16); // RE: IllegalArgumentException
+
+# NumberFormatException:
+- It is the child class of RuntimeException and hence it is unchecked.
+- Rised explicitly either by programmer or API developer to indicate that we are trying to convert string to number and the string is not properly formatted.
+e.g.
+int i = Integer.parseInt("10"); // valid
+int i = Integer.parseInt("ten"); // RE: NumberFormatException
+
+# IllegalStateException:
+- It is the child class of RuntimeException and hence it is unchecked.
+- Rised explicitly either by programmer or by API developer to indicate that a method has been invoked at wrong time.
+e.g.
+After starting of a thread, we are not allow to restart same thread once again otherwise we will get runtime exception saying IllegalStateException
+Thread t = new Thread();
+t.start(); // valid
+t.start(); // RE: IllegalStateException
+
+# AssertionError:
+- It is the child class of Error and hence it is unchecked.
+- Rised explicitly by programmer or by API developer to indicate that assert statement fails.
+e.g.
+assert(x > 10); // RE: AssertionError
+If x is not greater than 10 then we will get runtime exception saying AssertionError.
+
+# 1.7v Enhancements with respect to exception:
+- As a part of 1.7v enhancement, the following two concepts introduced:
+1. try with resources
+2. multi catch blocks
+
+# try with resources:
+- until 1.6v, it is highly recommanded to write finally block to close Resources which are open as a part of try block.
+e.g.
+BufferedReader br = null;
+try
+{
+    br = new BufferedReader(new FileReader("input.txt"));
+    // use br based on our requirement
+}
+catch(IoException e)
+{
+    // Handling code
+}
+finally 
+{
+    if (br != null)
+    {
+        br.close();
+    }
+}
+
+- The problems in this approach are we must close resources inside finally block which increases complexity of programming.
+- We have to write finally block and hence it increases length of the code and reduces readability.
+- To over this problem, SUN people introduced try with resource in 1.7v.
+- The main advantage of try with resources is whatever resources we opened as a part of try block will be closed automatically once control reaches end of try block either normally or abnormally and hence we are required to close explicitly.
+- We are not required to write finally block so that length of the code will be reduced and readability will be improved.
+e.g.
+try(BufferedReader br = new BufferedReader(new FileReader("input.txt")))
+{
+    // use br based on our requirement
+}
+catch(IoException e)
+{
+    // Handling code
+}
+
+# Conclusion:
+- we can declare multiple resources but these resources should be separated with semi-colon.
+try (R1; R2; R3)
+{
+
+}
+- All resources should be Autocloseable resources.
+- A resource is said to be Autocloseable if corresponding class implements java.lang.Autocloseable interface.
+- All Io related resouces, database related resources and network related resources are already implemented Autocloseable interface.
+- Autocloseable interface came in 1.7v. and it contains only one method close() i.e. public void close()
+- All resource refernce variables are implicitly final and hence within the try block we can't perform reassignment.
+- Until 1.6v try should be associated with either catch or finally but 1.7v onwards, we can take only try with resource without catch or finally.
+e.g.
+try (R)
+{
+
+}
+- The main advantage of try with resources is we are not required to write finally block explicitly because we are not required to close resources explicitly.
+
+
+# multi catch block:
+- until 1.6v, even though multiple different exception having same handling code for every exception type we have to write separate catch block. It increases length of the code and reduces readability.
+e.g.
+try
+{
+
+}
+catch (ArithmeticException e)
+{
+    e.printStackTrace();
+}
+catch (IoException e)
+{
+    e.printStackTrace();
+}
+catch (NullPointerException e)
+{
+    System.out.println(e.getMessage());
+}
+catch (InterruptedException e)
+{
+    System.out.println(e.getMessage());
+}
+
+- To over this problem, SUN people introdused multi catch block 1.7v.
+- According to this we can write a single catch block that can handle multiple different type of exceptions.
+e.g.
+try
+{
+
+}
+catch (ArithemeticException / IoException e)
+{
+    e.printStackTrace();
+}
+catch (NullPointerException / InterruptedException e)
+{
+    System.out.println(e.getMessage());
+}
+
+- The main advantage of this approach is readability will be improved and length of the code will be reduced.
+
+- In multi catch block, there should not be any relationship between exception types (either child to parent or parent to child or same type) otherwise we will get compile time error.
+e.g.
+try
+{
+
+}
+catch (ArithmeticException | Exception e)
+{
+    e.printStackTrace();
+} // CE: Alternatives in a multi-catch statement cannot be related by subclasses
+
+# Exception Propagation:
+- Inside a method, if an exception raised and if we are not handling that exception then exception object will be propagates to caller then caller method is responsible to handle exception. this process is called exception propagation.
