@@ -544,3 +544,203 @@ class ThreadDemo {
 
 
 # sleep():
+- If a thread don't want to perform any operation for a particular amount of time then we should go for sleep() method.
+public static native void sleep(long ms) throws InterruptedException
+public static void sleep(long ms, int ns) throws InterruptedException
+
+# Note: Every sleep() method throws InterruptedException, which is checked exception hence whenever we are using sleep() method we must handle InterruptedException either by try-catch or by throws keyword. Otherwise we will get compile time error.
+
+e.g.
+class ThreadDemo {
+    public static void main(String[] args) throws InterruptedException {
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Slide-" + i);
+            Thread.sleep(5000);
+        }
+    }
+}     
+o/p:
+Slide-0
+Slide-1
+Slide-2
+Slide-3
+Slide-4
+
+# How a Thread can interrupt another Thread?
+- A Thread can interrupt a sleeping thread or waiting thread by using interrupt method of thread class
+public void interrupt()
+e.g.
+class MyThread extends Thread {
+    public void run() {
+        try {
+            for (int i = 0; i < 5; i++) {
+                System.out.println("child thread");
+                Thread.sleep(2000);
+            }
+        } catch (InterruptedException e) {
+            System.out.println("I got interrupted");
+        }
+    }
+}
+class ThreadDemo {
+    public static void main(String[] args) throws InterruptedException {
+        MyThread t = new MyThread();
+        t.start();
+        t.interrupt();
+        System.out.println("end of main thread");
+    }
+}
+o/p:
+end of main thread
+child thread
+I got interrupted
+
+# Note: Whenever we are calling interrupt() method, if the target thread not in sleeping state or waiting state then there is no impart of interrupt call immediately. interrupt will be waited until target thread entered into sleeping or waiting state. If the target thread entered into sleeping or waiting state then immediately interrupt call will interrupt the target thread. If the target thread never entered into sleeping or waiting state then there is no impact of interrupt call. This is the only case where interrupt call will be wasted.
+
+e.g.
+class MyThread extends Thread {
+    public void run() {
+        for (int i = 0; i < 20; i++) {
+                System.out.println("child thread");
+        }
+        System.out.println("I am entering into sleeping state");
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            System.out.println("I got interrupted");
+        }
+    }
+}
+
+class ThreadDemo {
+    public static void main(String[] args) throws InterruptedException {
+        MyThread t = new MyThread();
+        t.start();
+        t.interrupt();
+        System.out.println("end of main thread");
+    }
+}
+o/p:
+end of main thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+child thread
+I am entering into sleeping state
+I got interrupted
+
+- In the above example, interrupt call waited until child thread completed for loop 20 times.
+
+# synchronization:
+- synchronized is a modifier applicable only for methods and blocks but not for classes and variables.
+- If multiple threads are trying to operate on same java object then there may be a chance of data inconsistency problem.
+- To overcome this problem we should go for synchronized keyword.
+- If a method or block declared as synchronized then at a time only one thread is allowed to execute that method or block on the given object so that data inconsistency problem will be resolved.
+- The main advantage of synchronized keyword is we can resolve data inconsistency problem but the main disadvantage is it increases waiting time of threads and creates performance problem.
+
+- Internally synchronization concept is implemented using lock.
+- Every object in java has a unique lock.
+- Whenever we are using synchronized keyword then only lock concept come into the picture.
+- If a thread wants to execute synchronized method on the given object.
+- first it has to get lock of that object
+- Once thread got the lock, it is allowed to execute any snychronized method on that object.
+- Once method execution completes, automatically thread releases lock.
+- Aquiring and releasing lock internally takes care by JVM and programmer not responsible for this activity.
+- While a thread executing synchronized method on the given object, the remaining threads are not allowed to execute any synchronized method simultaneouly on the same object but remaining threads allowed to execute non-synchronized method simultaneously.
+- Lock concept is implemented based on object but not based on method.
+e.g.
+class Display
+{
+    public synchronized void greet(String name)
+    {
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Hey: ");   
+            try
+            {
+                Thread.sleep(2000);
+            }
+            catch (InterruptedException e)
+            {
+                System.out.println(e);
+            }
+            System.out.println(name);
+        }
+    }
+}
+class MyThread extends Thread {
+    Display d;
+    String name;
+    MyThread(Display d, String name)
+    {
+        this.d = d;
+        this.name = name;
+    }
+    public void run() {
+        d.greet(name);
+    }
+}
+class ThreadDemo {
+    public static void main(String[] args) throws InterruptedException {
+        Display d = new Display();
+        MyThread t1 = new MyThread(d, "Dhoni");
+        MyThread t2 = new MyThread(d, "Kohli");
+        t1.start();
+        t2.start();
+    }
+}
+- If we are not declared greet() method as synchronized then both threads will be executed simultaneously and hence we will get irregular output.
+- If we declared greet() method as synchronized then at a time only one thread is allowed to execute greet() on the given Display object hence we will get regular output.
+
+# case study:
+class ThreadDemo {
+    public static void main(String[] args) throws InterruptedException {
+        Display d1 = new Display();
+        Display d2 = new Display();
+        MyThread t1 = new MyThread(d1, "Dhoni");
+        MyThread t2 = new MyThread(d2, "Kohli");
+        t1.start();
+        t2.start();
+    }
+}
+
+- Even though greet() method is synchronized, we will get irregular output becuase threads are operting on different java objects.
+
+# Conclusion: 
+- If multiple threads are operating on same java object then synchronization is required.
+- If multiple threads are operating on multiple java object then synchronization is not required.
+
+# class level lock:
+- Every class in java has a unique lock which is also known as class level lock.
+- If a thread wants to execute a static synchonized method then thread required class level lock
+- once thread got class level lock then it is allowed to execute any static synchronized method of that class.
+- once method execution completes, automatically thread releases lock.
+- While a thread executing static synchronized method, the remaining threads are not allowed to execute any static synchronized method of that class simultaneously but remaining threads are allowed to execute following methods simultaneously:
+1. normal static methods
+2. synchronized instance methods
+3. normal instance methods
+
+e.g.
+class X
+{
+    static synchronized m1() 
+    static synchronized m2()
+    static m3()
+    synchronized m4()
+    m5()
+}

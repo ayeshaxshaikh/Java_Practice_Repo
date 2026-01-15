@@ -273,8 +273,110 @@
 
 
 
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         Thread.currentThread().join();
+//     }
+// }
+
+
+
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         for (int i = 0; i < 5; i++) {
+//             System.out.println("Slide-" + i);
+//             Thread.sleep(5000);
+//         }
+//     }
+// }            
+
+
+
+// class MyThread extends Thread {
+//     public void run() {
+//         try {
+//             for (int i = 0; i < 5; i++) {
+//                 System.out.println("child thread");
+//                 Thread.sleep(2000);
+//             }
+//         } catch (InterruptedException e) {
+//             System.out.println("I got interrupted");
+//         }
+//     }
+// }
+
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         MyThread t = new MyThread();
+//         t.start();
+//         t.interrupt();
+//         System.out.println("end of main thread");
+//     }
+// }
+
+
+
+// class MyThread extends Thread {
+//     public void run() {
+//         for (int i = 0; i < 20; i++) {
+//                 System.out.println("child thread");
+//         }
+//         System.out.println("I am entering into sleeping state");
+//         try {
+//             Thread.sleep(10000);
+//         } catch (InterruptedException e) {
+//             System.out.println("I got interrupted");
+//         }
+//     }
+// }
+
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         MyThread t = new MyThread();
+//         t.start();
+//         t.interrupt();
+//         System.out.println("end of main thread");
+//     }
+// }
+
+
+
+class Display
+{
+    public synchronized void greet(String name)
+    {
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Hey: ");   
+            try
+            {
+                Thread.sleep(2000);
+            }
+            catch (InterruptedException e)
+            {
+                System.out.println(e);
+            }
+            System.out.println(name);
+        }
+    }
+}
+class MyThread extends Thread {
+    Display d;
+    String name;
+    MyThread(Display d, String name)
+    {
+        this.d = d;
+        this.name = name;
+    }
+    public void run() {
+        d.greet(name);
+    }
+}
 class ThreadDemo {
     public static void main(String[] args) throws InterruptedException {
-        Thread.currentThread().join();
+        Display d = new Display();
+        MyThread t1 = new MyThread(d, "Dhoni");
+        MyThread t2 = new MyThread(d, "Kohli");
+        t1.start();
+        t2.start();
     }
 }
