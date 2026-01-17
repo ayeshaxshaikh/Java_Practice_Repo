@@ -341,42 +341,226 @@
 
 
 
-class Display
+// class Display
+// {
+//     public synchronized void greet(String name)
+//     {
+//         for (int i = 0; i < 5; i++) {
+//             System.out.print("Hey: ");   
+//             try
+//             {
+//                 Thread.sleep(2000);
+//             }
+//             catch (InterruptedException e)
+//             {
+//                 System.out.println(e);
+//             }
+//             System.out.println(name);
+//         }
+//     }
+// }
+// class MyThread extends Thread {
+//     Display d;
+//     String name;
+//     MyThread(Display d, String name)
+//     {
+//         this.d = d;
+//         this.name = name;
+//     }
+//     public void run() {
+//         d.greet(name);
+//     }
+// }
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         Display d = new Display();
+//         MyThread t1 = new MyThread(d, "Dhoni");
+//         MyThread t2 = new MyThread(d, "Kohli");
+//         t1.start();
+//         t2.start();
+//     }
+// }
+
+
+
+
+// class Display
+// {
+//     public void greet(String name)
+//     {
+//         synchronized(this)
+//         {
+//             for (int i = 0; i < 5; i++) {
+//             System.out.print("Hey: ");   
+//             try
+//             {
+//                 Thread.sleep(2000);
+//             }
+//             catch (InterruptedException e)
+//             {
+//                 System.out.println(e);
+//             }
+//             System.out.println(name);
+//         }
+//         }
+//     }
+// }
+// class MyThread extends Thread {
+//     Display d;
+//     String name;
+//     MyThread(Display d, String name)
+//     {
+//         this.d = d;
+//         this.name = name;
+//     }
+//     public void run() {
+//         d.greet(name);
+//     }
+// }
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         Display d = new Display();
+//         MyThread t1 = new MyThread(d, "Dhoni");
+//         MyThread t2 = new MyThread(d, "Kohli");
+//         t1.start();
+//         t2.start();
+//     }
+// }
+
+
+
+
+// class Display
+// {
+//     public void greet(String name)
+//     {
+//         synchronized(Display.class)
+//         {
+//             for (int i = 0; i < 5; i++) {
+//             System.out.print("Hey: ");   
+//             try
+//             {
+//                 Thread.sleep(2000);
+//             }
+//             catch (InterruptedException e)
+//             {
+//                 System.out.println(e);
+//             }
+//             System.out.println(name);
+//         }
+//         }
+//     }
+// }
+// class MyThread extends Thread {
+//     Display d;
+//     String name;
+//     MyThread(Display d, String name)
+//     {
+//         this.d = d;
+//         this.name = name;
+//     }
+//     public void run() {
+//         d.greet(name);
+//     }
+// }
+// class ThreadDemo {
+//     public static void main(String[] args) throws InterruptedException {
+//         Display d1 = new Display();
+//         Display d2 = new Display();
+//         MyThread t1 = new MyThread(d1, "Dhoni");
+//         MyThread t2 = new MyThread(d2, "Kohli");
+//         t1.start();
+//         t2.start();
+//     }
+// }
+
+
+
+
+// class ThreadA
+// {
+//     public static void main(String[] aStrings) throws InterruptedException
+//     {
+//         ThreadB b = new ThreadB();
+//         b.start();
+//         synchronized(b)
+//         {
+//             System.out.println("main method trying to call wait() method");
+//             b.wait();
+//             System.out.println("main thread got notification");
+//             System.out.println(b.total);
+//         }
+//     }
+// }
+// class ThreadB extends Thread
+// {
+//     int total = 0;
+//     public void run()
+//     {
+//         synchronized(this)
+//         {
+//             System.out.println("child thread starts calculation");
+//             for (int i = 1; i <= 100; i++) {
+//                 total = total + i;
+//             }
+//             System.out.println("child thread giving notification");
+//             this.notify();
+//         }
+//     }
+// }
+
+
+
+class A
 {
-    public synchronized void greet(String name)
+    public synchronized void d1(B b)
     {
-        for (int i = 0; i < 5; i++) {
-            System.out.print("Hey: ");   
-            try
-            {
-                Thread.sleep(2000);
-            }
-            catch (InterruptedException e)
-            {
-                System.out.println(e);
-            }
-            System.out.println(name);
+        System.out.println("Thread 1 starts execution od d1() method");
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            
         }
+        System.out.println("Thread 1 trying to call B's last()");    
+        b.last();
     }
-}
-class MyThread extends Thread {
-    Display d;
-    String name;
-    MyThread(Display d, String name)
+    public synchronized void last()
     {
-        this.d = d;
-        this.name = name;
-    }
-    public void run() {
-        d.greet(name);
+        System.out.println("Inside A, this is last() method");
     }
 }
-class ThreadDemo {
-    public static void main(String[] args) throws InterruptedException {
-        Display d = new Display();
-        MyThread t1 = new MyThread(d, "Dhoni");
-        MyThread t2 = new MyThread(d, "Kohli");
-        t1.start();
-        t2.start();
+class B
+{
+    public synchronized void d2(A a)
+    {
+        System.out.println("Thread 2 starts execution od d2() method");
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+            }
+        System.out.println("Thread 2 trying to call A's last()");    
+        a.last();
+    }
+    public synchronized void last()
+        {
+            System.out.println("Inside B, this is last() method");
+        }
+}
+class DeadLock extends Thread
+{
+    A a = new A();    
+    B b = new B();    
+    public void m1()
+    {
+        this.start();
+        a.d1(b);
+    }
+    public void run()
+    {
+        b.d2(a);
+    }
+    public static void main(String[] args) {
+        DeadLock d = new DeadLock();
+        d.m1();
     }
 }

@@ -744,3 +744,205 @@ class X
     synchronized m4()
     m5()
 }
+
+# synchronized block:
+- If very few lines of code required synchronization then it is not recommanded to  declared entire method as synchronized.
+- We have to enclose those few lines of code by using synchronized block.
+- The main advantage synchronized block over synchronized method is, it reduces waiting time of threads and improves performance of the system.
+- We can declare synchronized block as follows:
+1. to get Lock of current Object:
+synchronized(this)
+{
+If a thread got Lock of current object then only it is allowed to execute this area
+}
+
+2. to get Lock of particular Objet 'b':
+synchronized(b)
+{
+    If a thread got lock of particular object 'b' then only it is allowed to execute this Area
+}
+
+3. to get class level lock:
+synchronized(Display.class)
+{
+    If a thread got class level lock of 'Display' class, then only it is allowed to execute this area
+}
+
+- Lock concept applicable for only object and class but not for primitives hence we can't pass primitive argument type to synchronized block otherwise we will get compile time error.
+
+# FAQs:
+1. What is synchronized keyword and where we can apply?
+2. Explain advantage of synchronized keyword?
+3. Explain disadvantage of synchronized keyword?
+4. What is Race Condition?
+5. What is Object Lock and when it is required?
+6. What is class level lock and when it is required?
+7. What is the difference between class level lock and object level lock?
+
+# Inter Thread Communication:
+- Two threads can communicate with eachother by using wait(), notify() and notifyAll().
+- The Thread which is expecting updation is responsible to call wait() method then immediately the thread will entered into waiting state.
+- The thread which is responsible to perform updation, after performing updation it is responsible to call notify() method then waiting thread will get notification and continue with execution with those updated items.
+- wait(), notify() and notifyAll() methods present in Object class but not in thread class because thread can call these methods on any java object.
+- To call wait(), notify(), notifyAll() methods on any object, thread should be owner of that object that is the thread should has lock of that object. The thread should be inside synchronized area. 
+- Hence we can call wait(), notify() and notifyAll() methods only from synchronized area. Otherwise we will get runtime exception.
+
+- If a thread class wait() method on any object, it immediately releases the lock of that particular object and entered into waiting state
+- If a thread calls notify() method on any object it releases lock of that object but may not immediately.
+- Except wait(), notify() and notifyALl(), there is no other method where thread releases lock.
+
+public final void wait() throws InterruptedException
+public final native void wait(long ms) throws InterruptedException
+public final void wait(long ms, int ns) throws InterruptedException
+
+public final native void notify() 
+public final native void notifyAll() 
+
+# Note: Every wait() method throws InterruptedException which is checked exception hence whnever we are using wait() method we must handle this InterruptedException either by try-catch or by throws keyword Otherwise we will get compile time error.
+
+e.g.
+class ThreadA
+{
+    public static void main(String[] aStrings) throws InterruptedException
+    {
+        ThreadB b = new ThreadB();
+        b.start();
+        synchronized(b)
+        {
+            System.out.println("main method trying to call wait() method");
+            b.wait();
+            System.out.println("main thread got notification");
+            System.out.println(b.total);
+        }
+    }
+}
+class ThreadB extends Thread
+{
+    int total = 0;
+    public void run()
+    {
+        synchronized(this)
+        {
+            System.out.println("child thread starts calculation");
+            for (int i = 1; i <= 100; i++) {
+                total = total + i;
+            }
+            System.out.println("child thread giving notification");
+            this.notify();
+        }
+    }
+}
+o/p:
+main method trying to call wait() method
+child thread starts calculation
+child thread giving notification
+main thread got notification
+5050
+
+# producer-consumer problem:
+- producer thread is responsible to produce items with q and consumer thread is responsible to consume items from the q.
+- If q is empty, then consumer method will call wait() method and entered into waiting state.
+- After producing items to the q, producer thread is responsible to call notify() method then waiting consumer will get that notification and continue its exxecution with updated items.
+e.g.
+class ProducerThread
+{
+    produce()
+    {
+        synchronized(q)
+        {
+            produce items to the Queue
+            q.notify();
+        }
+    }
+}
+class ConsumerThread
+{
+    comsume()
+    {
+        synchronized(q)
+        {
+            if (q is empty)
+            {
+                q.wait();
+            } 
+            else
+            {
+                consume items
+            }
+        }
+    }
+}
+
+# difference between notify() and notifyAll():
+- We can use notify() method to give the notification for only one waiting thread.
+- If multiple threads are waiting then only one thread will be notify and the remaining threads have to wait for further notifications.
+- which thread will be notified we can't expect. It depends on JVM.
+- We can use notifyAll() to give the notification for all waiting threads of a particular object.
+- Even though multiple threads notified but execution will be performed one by one because threads required lock and only one lock is available.
+
+
+# DeadLock:
+- If two threads are waiting for each other forever such type of infinite waiting is called DeadLock.
+- synchronized keyword is only reason for deadlock situation hence while using synchronized keyword we have to take special care.
+- There are no resolution technique for deadlock but several prevention techniques are available.
+e.g.
+class A
+{
+    public synchronized void d1(B b)
+    {
+        System.out.println("Thread 1 starts execution od d1() method");
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            
+        }
+        System.out.println("Thread 1 trying to call B's last()");    
+        b.last();
+    }
+    public synchronized void last()
+    {
+        System.out.println("Inside A, this is last() method");
+    }
+}
+class B
+{
+    public synchronized void d2(A a)
+    {
+        System.out.println("Thread 2 starts execution od d2() method");
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+            }
+        System.out.println("Thread 2 trying to call A's last()");    
+        a.last();
+    }
+    public synchronized void last()
+        {
+            System.out.println("Inside B, this is last() method");
+        }
+}
+class DeadLock extends Thread
+{
+    A a = new A();    
+    B b = new B();    
+    public void m1()
+    {
+        this.start();
+        a.d1(b);
+    }
+    public void run()
+    {
+        b.d2(a);
+    }
+    public static void main(String[] args) {
+        DeadLock d = new DeadLock();
+        d.m1();
+    }
+}
+
+- In the above program, if we remove at least one synchronized keyword, then the program won't entered into deadlock.
+- Hence synchronized keyword is the only reason for deadlock situation.
+
+# deadlock vs starvation:
+- Long waiting of a thread where waiting never ends is called deadlock 
+- Whereas long waiting of a thread where waiting ends at certain point is called starvation. for example low priority thread has to wait until completing all high priority threads. It may be long waiting but ends at certain point.
