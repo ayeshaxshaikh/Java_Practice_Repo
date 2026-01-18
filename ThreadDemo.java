@@ -511,56 +511,103 @@
 
 
 
-class A
-{
-    public synchronized void d1(B b)
-    {
-        System.out.println("Thread 1 starts execution od d1() method");
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
+// class A
+// {
+//     public synchronized void d1(B b)
+//     {
+//         System.out.println("Thread 1 starts execution od d1() method");
+//         try {
+//             Thread.sleep(6000);
+//         } catch (InterruptedException e) {
             
-        }
-        System.out.println("Thread 1 trying to call B's last()");    
-        b.last();
-    }
-    public synchronized void last()
-    {
-        System.out.println("Inside A, this is last() method");
-    }
-}
-class B
+//         }
+//         System.out.println("Thread 1 trying to call B's last()");    
+//         b.last();
+//     }
+//     public synchronized void last()
+//     {
+//         System.out.println("Inside A, this is last() method");
+//     }
+// }
+// class B
+// {
+//     public synchronized void d2(A a)
+//     {
+//         System.out.println("Thread 2 starts execution od d2() method");
+//             try {
+//                 Thread.sleep(6000);
+//             } catch (InterruptedException e) {
+//             }
+//         System.out.println("Thread 2 trying to call A's last()");    
+//         a.last();
+//     }
+//     public synchronized void last()
+//         {
+//             System.out.println("Inside B, this is last() method");
+//         }
+// }
+// class DeadLock extends Thread
+// {
+//     A a = new A();    
+//     B b = new B();    
+//     public void m1()
+//     {
+//         this.start();
+//         a.d1(b);
+//     }
+//     public void run()
+//     {
+//         b.d2(a);
+//     }
+//     public static void main(String[] args) {
+//         DeadLock d = new DeadLock();
+//         d.m1();
+//     }
+// }
+
+
+
+
+// class MyThread extends Thread
+// {
+
+// }
+// class DaemonDemo
+// {
+//     public static void main(String[] args) {
+//         System.out.println(Thread.currentThread().isDaemon()); // false
+//         // Thread.currentThread().setDaemon(true); // Exception in thread "main" java.lang.IllegalThreadStateException
+//         MyThread t = new MyThread();
+//         System.out.println(t.isDaemon()); // false
+//         t.setDaemon(true);
+//         System.out.println(t.isDaemon()); // true
+//     }
+// }
+
+
+
+
+
+class MyThread extends Thread
 {
-    public synchronized void d2(A a)
-    {
-        System.out.println("Thread 2 starts execution od d2() method");
-            try {
-                Thread.sleep(6000);
-            } catch (InterruptedException e) {
-            }
-        System.out.println("Thread 2 trying to call A's last()");    
-        a.last();
-    }
-    public synchronized void last()
-        {
-            System.out.println("Inside B, this is last() method");
-        }
-}
-class DeadLock extends Thread
-{
-    A a = new A();    
-    B b = new B();    
-    public void m1()
-    {
-        this.start();
-        a.d1(b);
-    }
     public void run()
     {
-        b.d2(a);
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Child Thread");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                
+            }
+        }
     }
+}
+class DaemonDemo
+{
     public static void main(String[] args) {
-        DeadLock d = new DeadLock();
-        d.m1();
+        MyThread t = new MyThread();
+        t.setDaemon(true);
+        t.start();
+        System.out.println("End of the main thread");
     }
 }
