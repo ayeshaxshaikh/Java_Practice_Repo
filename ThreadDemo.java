@@ -588,26 +588,108 @@
 
 
 
-class MyThread extends Thread
-{
-    public void run()
-    {
-        for (int i = 0; i < 5; i++) {
-            System.out.println("Child Thread");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+// class MyThread extends Thread
+// {
+//     public void run()
+//     {
+//         for (int i = 0; i < 5; i++) {
+//             System.out.println("Child Thread");
+//             try {
+//                 Thread.sleep(2000);
+//             } catch (InterruptedException e) {
                 
-            }
-        }
-    }
-}
-class DaemonDemo
+//             }
+//         }
+//     }
+// }
+// class DaemonDemo
+// {
+//     public static void main(String[] args) {
+//         MyThread t = new MyThread();
+//         t.setDaemon(true);
+//         t.start();
+//         System.out.println("End of the main thread");
+//     }
+// }
+
+
+
+// class Test
+// {
+//     public static void main(String[] args)
+//     {
+//         ThreadGroup g1 = new ThreadGroup("First Group");
+//         System.out.println(g1.getParent().getName()); 
+//         ThreadGroup g2 = new ThreadGroup(g1, "Second Group");
+//         System.out.println(g2.getParent().getName()); 
+//     }
+// }
+
+
+
+// class ThreadGroupDemo
+// {
+//     public static void main(String[] args)
+//     {
+//         ThreadGroup g1 = new ThreadGroup("tg");
+//         Thread t1 = new Thread(g1, "Thread1");
+//         Thread t2 = new Thread(g1, "Thread2");
+//         g1.setMaxPriority(3);
+//         Thread t3 = new Thread(g1, "Thread3");
+//         System.out.println(t1.getPriority()); 
+//         System.out.println(t2.getPriority()); 
+//         System.out.println(t3.getPriority()); 
+//     }
+// }
+
+
+// class MyThread extends Thread
+// {
+//     MyThread(ThreadGroup g, String name)
+//     {
+//         super(g, name);
+//     }
+//     public void run()
+//     {
+//         System.out.println("Child Thread");
+//         try {
+//             Thread.sleep(5000);
+//         } catch (Exception e) {
+//         }
+//     }
+// }
+
+// class ThreadGroupDemo
+// {
+//     public static void main(String[] args) throws Exception
+//     {
+//         ThreadGroup pg = new ThreadGroup("ParentGroup");
+//         ThreadGroup cg = new ThreadGroup("ChildGroup");
+//         MyThread t1 = new MyThread(pg, "ChildThread1");
+//         MyThread t2 = new MyThread(pg, "ChildThread2");
+//         t1.start();
+//         t2.start();
+//         System.out.println(pg.activeCount()); 
+//         System.out.println(pg.activeGroupCount()); 
+//         pg.list();
+//         Thread.sleep(10000);
+//         System.out.println(pg.activeCount()); 
+//         System.out.println(pg.activeGroupCount());
+//         pg.list();
+//     }
+// }
+
+
+
+class ThreadGroupDemo
 {
-    public static void main(String[] args) {
-        MyThread t = new MyThread();
-        t.setDaemon(true);
-        t.start();
-        System.out.println("End of the main thread");
+    public static void main(String[] args)
+    {
+        ThreadGroup system = Thread.currentThread().getThreadGroup().getParent();
+        Thread[] t = new Thread[system.activeCount()];
+        system.enumerate(t);
+        for (Thread t1 : t) {
+            System.out.println(t1.getName() + "...." + t1.isDaemon());
+        }
     }
 }
