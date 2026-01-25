@@ -156,8 +156,135 @@
 
 
 
+// class Demo {
+//     int x = 10;
+//     static int y = 20;
+//     public void m1()
+//     {
+//         class Inner {
+//             public void m2()
+//             {
+//                 System.out.println(x);
+//                 System.out.println(y);
+//             }
+//         }
+//         Inner i = new Inner();
+//         i.m2();
+//     }
+//     public static void main(String[] args) {
+//         Demo d = new Demo();
+//         d.m1();
+//     }
+// }
 
-class Demo {
-    int x = 10;
-    
+
+// class Demo {
+//     public void m1()
+//     {
+//         int x = 10;
+//         class Inner {
+//             public void m2()
+//             {
+//                 System.out.println(x);
+//             }
+//         }
+//         Inner i = new Inner();
+//         i.m2();
+//     }
+//     public static void main(String[] args) {
+//         Demo d = new Demo();
+//         d.m1();
+//     }
+// }
+
+
+
+// class PopCorn {
+//     public void taste()
+//     {
+//         System.out.println("salty");
+//     }
+// }
+// class Demo {
+//     public static void main(String[] args) {
+//         PopCorn p = new PopCorn() {
+//             public void taste()
+//             {
+//                 System.out.println("spicy");
+//             }
+//         };
+//         p.taste();
+//         PopCorn p1 = new PopCorn();
+//         p1.taste();
+//         PopCorn p2 = new PopCorn() {
+//             public void taste() {
+//                 System.out.println("sweet");
+//             }
+//         };
+//         p2.taste();
+//         System.out.println(p.getClass().getName());
+//         System.out.println(p1.getClass().getName());
+//         System.out.println(p2.getClass().getName());
+//     }
+// }
+
+
+
+
+
+// class ThreadDemo {
+//     public static void main(String[] args) {
+//         Thread t = new Thread() {
+//             public void run()
+//             {
+//                 for (int i = 0; i < 5; i++) {
+//                     System.out.println("child thread");
+//                 }
+//             }
+//         };
+//         t.start();
+//         for (int i = 0; i < 5; i++) {
+//             System.out.println("main thread");
+//         }
+//     }
+// }
+
+
+
+
+
+// class ThreadDemo {
+//     public static void main(String[] args) {
+//         Runnable r = new Runnable() {
+//             public void run()
+//             {
+//                 for (int i = 0; i < 10; i++) {
+//                     System.out.println("child thread");   
+//                 }
+//             }
+//         };
+//         Thread t = new Thread(r);
+//         t.start();
+//         for (int i = 0; i < 10; i++) {
+//             System.out.println("main thread");
+//         }
+//     }
+// }
+
+
+
+class ThreadDemo {
+    public static void main(String[] args) {
+        new Thread(new Runnable() {
+           public void run() 
+           {
+                for (int i = 0; i < 10; i++) {
+                    System.out.println("child thread");
+                }
+           }
+        }).start();
+        for (int i = 0; i < 10; i++) {
+            System.out.println("main thread");
+        }
+    }
 }
