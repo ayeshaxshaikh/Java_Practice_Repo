@@ -273,18 +273,64 @@
 
 
 
-class ThreadDemo {
-    public static void main(String[] args) {
-        new Thread(new Runnable() {
-           public void run() 
-           {
-                for (int i = 0; i < 10; i++) {
-                    System.out.println("child thread");
-                }
-           }
-        }).start();
-        for (int i = 0; i < 10; i++) {
-            System.out.println("main thread");
-        }
-    }
-}
+// class ThreadDemo {
+//     public static void main(String[] args) {
+//         new Thread(new Runnable() {
+//            public void run() 
+//            {
+//                 for (int i = 0; i < 10; i++) {
+//                     System.out.println("child thread");
+//                 }
+//            }
+//         }).start();
+//         for (int i = 0; i < 10; i++) {
+//             System.out.println("main thread");
+//         }
+//     }
+// }
+
+
+
+
+// class Outer {
+//     static class Nested {
+//         public void m1()
+//         {
+//             System.out.println("static nested method");
+//         }
+//     }
+//     public static void main(String[] args) {
+//         Nested n = new Nested();
+//         n.m1();
+//     }
+// }
+
+
+// class Test {
+//     static class Nested {
+//         public static void main(String[] args) {
+//             System.out.println("static nested method");
+//         }
+//     }
+//     public static void main(String[] args) {
+//         System.out.println("main method");
+//     }
+// }
+
+
+
+// class NestedDemo {
+//     int x = 10;
+//     static int y = 20;
+//     static class Nested {
+//         public void m1()
+//         {
+//             System.out.println(x);
+//             System.out.println(y);
+//         }
+//     }
+// }
+
+
+
+

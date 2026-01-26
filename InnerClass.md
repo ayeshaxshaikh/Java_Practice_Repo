@@ -378,3 +378,65 @@ class ThreadDemo {
 
 # Note: If the requirement is standard and required several times then we should go for normal top level class. If the requirement is temporary and required only once (instant use) then we should go for anonymous inner class.
 
+# static nested class:
+- sometimes we can declare inner class with static modifier such type of inner classes are called static nested classes.
+- In the case of normal or regular inner class without existing outer class object there is no chance of existing inner class object. i.e. inner class object is strongly associated with outer class object.
+- But in the case of static nested classes without existing outer class object there may be a chance of existing nested class object. Hence static nested class object is not strongly associated with outer class object.
+
+class Outer {
+    static class Nested {
+        public void m1()
+        {
+            System.out.println("static nested method");
+        }
+    }
+    public static void main(String[] args) {
+        Nested n = new Nested();
+        n.m1();
+    }
+}
+o/p: static nested method
+
+- If you want to create nested class object from outside of outer class then we can create as follows:
+Outer.Nested n = new Test.Nested();
+
+- In static nested classes we can declared static members including main() method hence we can invoke static nested class directly from commnad prompt.
+
+class Test {
+    static class Nested {
+        public static void main(String[] args) {
+            System.out.println("static nested method");
+        }
+    }
+    public static void main(String[] args) {
+        System.out.println("main method");
+    }
+}
+
+- From normal or regular classes we can access both static and non-static members of outer class directly but from static nested classes we can static members of outer class directly but not non-static members.
+
+e.g.
+class NestedDemo {
+    int x = 10;
+    static int y = 20;
+    static class Nested {
+        public void m1()
+        {
+            System.out.println(x);
+            System.out.println(y);
+        }
+    }
+}
+CE: non-static variable x cannot be accessed in static nested class.
+
+# various combinations of nested class and interface:
+case-1: Interface inside a class
+- Inside a class if we require multiple implementations of an interface and all these implementations are related to a particular class then we can define interface inside a class
+
+case-2: Interface inside interface
+- we can declare interface inside interface 
+- every interface present inside interface is always public and static whether we are declaring or not hence we can implement inner interface directly without implementing outer interface.
+- similarly whenever we are implementing outer interface we are not required to implement interface i.e. we can implement outer and inner interface independently
+
+case-3: class inside interface
+- If a functionality of a class is closely associated with interface then it is highly recommanded to declare a class inside interface
