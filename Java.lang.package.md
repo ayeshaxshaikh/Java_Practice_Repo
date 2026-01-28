@@ -112,3 +112,123 @@ class Student {
 # toString() vs hashCode():
 - If we are giving a chance to object class toString() method it will internally call hashCode() method
 - If we are overriding toString() method then our toString() method may not call hashCode() method
+
+# equals():
+- we can use equals() method to check equality of two objects.
+- obj1.equals(obj2)
+- If our class does not contain equals() method the object class equals() method will be executed
+e.g.
+
+class Student {
+String name;
+int rollno;
+Student(String name, int rollno) {
+this.name = name;
+this.rollno = rollno;
+}
+public static void main(String[] args) {
+Student s1 = new Student("Sam", 1);
+Student s2 = new Student("Smith", 2);
+Student s3 = new Student("Steve", 3);
+Student s4 = s1;
+System.out.println(s1.equals(s2));  // false
+System.out.println(s1.equals(s3));  // false
+System.out.println(s1.equals(s4));  // true
+}
+}
+
+- In the above example object class equals method got executed which is meant for reference comparison (address comparison) i.e. if the two reference pointing towards same object then only it returns true.
+- Based on our requirement we can override equals() method for content comparison.
+- While overriding equals() method for content comparison we have to take care about the following:
+1. What is the meaning of equality (whether we have to check only names or only roll numbers or  both)
+2. If we are passing different type of object our equals() method should not rise ClassCastException i.e. we have to handle ClassCastException to return false
+3. If we are passing null argument then our equals() method should not rise NullPointerException i.e. we have to handle NullPointerException to return false.
+
+- The following is the proper way of overriding equals() method for content comparison in a proper way:
+e.g.
+
+class Student {
+String name;
+int rollno;
+Student(String name, int rollno) {
+this.name = name;
+this.rollno = rollno;
+}
+public boolean equals(Object obj) {
+try {
+String name1 = this.name;
+int rollno1 = this.rollno;
+Student s = (Student)obj;  // ClassCastException
+String name2 = s.name;
+int rollno2 = s.rollno;
+if (name1.equals(name2) && rollno1 == rollno2) {
+return true;
+} else  {
+return false;
+}
+} catch (ClassCastException e) {
+return false;
+} catch (NullPointerException e) {
+return false;
+}
+}
+public static void main(String[] args) {
+Student s1 = new Student("Sam", 1);
+Student s2 = new Student("Sam", 1);
+Student s3 = new Student("Steve", 3);
+Student s4 = s1;
+System.out.println(s1.equals(s2));
+System.out.println(s1.equals(s3));
+System.out.println(s1.equals(s4));
+}
+}
+
+
+# Note : In String class .equals() method is overridden for content comparison hence even though objects are different if content is same then .equals() method returns true
+# Note : In StringBuffer class .equals() method is not overridden for content comparison hence if objects are different then .equals() method returns false even though content is same
+e.g.
+class Test {
+public static void main(String[] args) {
+String s1 = new String("Hello");
+String s2 = new String("Hello");
+StringBuffer sb1 = new StringBuffer("Hello");
+StringBuffer sb2 = new StringBuffer("Hello");
+System.out.println(s1 == s2);   // false
+System.out.println(s1.equals(s2));  // true
+System.out.println(sb1 == sb2);  // false
+System.out.println(sb1.equals(sb2)); // false
+}
+}
+
+# getClass():
+- We can use getClass() method to get runtime class definition of an object
+- public final Class getClass()
+- By using Class class Object we can access class level properties like fully qualified name of the class, methods information, constructor information etc.
+- e.g.
+  import java.lang.reflect.Method;
+
+class Test {
+public static void main(String[] args) {
+int count = 0;
+Object o = new String("Hello");
+Class c = o.getClass();
+System.out.println(c.getName());
+Method[] m = c.getDeclaredMethods();
+for (Method m1 : m) {
+count++;
+System.out.println(m1.getName());
+}
+System.out.println(count);
+}
+}
+
+e.g. To display database vendor specific connection interface implemented Class name:
+Connection con = Drivermanager.getConnection();
+System.out.println(con.getClass().getName());
+
+# Note: After loading every .class file jvm will create an object of the type java.lang.Class in the heap are. Programmer can use this class object to get class level information. we can use getClass() method very frequently in reflections.
+
+# finalize():
+- just before destroying an object garbage collector calls finalize() method to perform cleanup activities.
+- Once finalize() methods completes automatically garbage collector destroys that object.
+
