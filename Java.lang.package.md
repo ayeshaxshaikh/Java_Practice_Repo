@@ -226,9 +226,379 @@ e.g. To display database vendor specific connection interface implemented Class 
 Connection con = Drivermanager.getConnection();
 System.out.println(con.getClass().getName());
 
-# Note: After loading every .class file jvm will create an object of the type java.lang.Class in the heap are. Programmer can use this class object to get class level information. we can use getClass() method very frequently in reflections.
+# Note: After loading every .class file jvm will create an object of the type java.lang.Class in the heap area. Programmer can use this class object to get class level information. we can use getClass() method very frequently in reflections.
 
 # finalize():
 - just before destroying an object garbage collector calls finalize() method to perform cleanup activities.
 - Once finalize() methods completes automatically garbage collector destroys that object.
+
+# String:
+# case-1:
+e.g.
+String s = new String("Love");
+s.concat("fancy");
+System.out.println(s); // Love
+
+- Once we create a String object we can't perform any changes in the existing object 
+- If we are trying to perform any change with those changes a new object will be created
+- This is non-changeable behavior is nothing but immutability of String.  
+
+e.g.
+StringBuffer sb = new StringBuffer("Love");
+s.concat("fancy");
+System.out.println(sb); // Lovefancy
+
+-  Once we create a StringBuffer object we can perform any changes in the existing object
+- This is changeable behavior is nothing but mutability of StringBuffer Object.  
+
+# case-2:
+e.g.
+String s1 = new String("Love");
+String s2 = new String("Love");
+System.out.println(s1 == s2); // false
+System.out.println(s1.equals(s2)); // true
+
+- In String class, .equals() method is overridden for content comparison hence even if the objects are different and if the contents are same then .equals() method return true
+
+e.g.
+StringBuffer sb1 = new StringBuffer("Love");
+StringBuffer sb2 = new StringBuffer("Love");
+System.out.println(sb1 == sb2); // false
+System.out.println(sb1.equals(sb2)); // false
+
+- In StringBuffer class, .equals() method is not overridden for content comparison hence object class .equals() method got executed which is meant reference comparison (address comparison). Due to this if the objects are different and if the contents are same then .equals() method return false
+
+# case-3:
+e.g.
+String s1 = new String("Love");
+
+Heap   scp 
+-------------
+Love>   Love
+
+- In this case, two object will be created. one in the heap area and the other is in scp (string constant pull) and here s1 is always pointing to heap object.
+
+e.g.
+String s1 = ("Love");
+
+Heap   scp
+-------------
+      Love
+
+- In this case, one object will be created in scp (string constant pull) and here s1 is always pointing to that object.
+
+# Note: Object creation in SCP is optional, first it will check is there any object already present in SCP with required content. If object already present then existing object will be reused. If object not already present then a new object will be created. But this rule is applicable only for SCP but not for the heap.
+
+# Note: Garbage collector is not allowed to access SCP area hence even if Object doesn't contain reference variable it is not eligible for Garbage collector If it is present in SCP area.
+
+- All SCP objects will be destroyed automatically at the time JVM shutdown.
+
+e.g.
+String s1 = new String("love");
+String s2 = new String("love");
+String s3 = "love";
+String s4 = "love";
+
+heap                SCP
+--------------------------------------
+s1 --> love        love --> s2, s3, s4
+s2 --> love        
+
+# Note: Whenever we are using a new operator compulsory a new Object will be created in the heap area hence there may be chance of existing two objects with same content in the heap area but not in SCP that means duplicate objects are possible in the heap area but not in SCP.
+
+e.g.
+String s1 = new String("micro");
+s1.concat("soft");  // it will destroyed by garbage collector because no variable holding this modificatoion
+String s2 = s1.concat("solution");
+s1 = s1.concat("pvt.lmt");
+System.out.println(s1); // micropvt.lmt  
+System.out.println(s2); // microsolution
+
+heap                              SCP
+-------------------------------------------------
+s1 --> micro                      micro
+microsoft                         soft
+s2 --> microsolution              solution
+s1 --> micropvt.lmt               pvt.lmt
+
+# Note: for every string constant one object will be placed in SCP area. 
+# Note: Because of some runtime operation if the object is required to create that object will be placed only in the heap area but not in SCP area.
+
+# Constructors of String Class:
+1. String s = new String();
+- creates an empty string object.
+
+2. String s = new String(String literals);
+- creates a string object on the heap for the given string literal
+
+3. String s = new String(StringBuffer sb);
+- creates an equivalent string object for the given stringbuffer.
+
+4. String s = new String(char[] ch);
+- creates an equivalent string object for the given char[].
+e.g.
+char[] ch = {'a', 'b', 'c', 'd'};
+String s = new String(ch);
+System.out.println(s); // abcd
+
+5. String s = new String(byte[] b);
+- creates an equivalent string object for the given byte[].
+e.g.
+byte[] b = {100, 101, 102};
+String s = new String(b);  
+System.out.println(s); // def
+
+
+# Important methods of String class:
+1. public char charAt(int index);
+- returns the character locating at specified index.
+e.g.
+String s = "love";
+   System.out.println(s.charAt(2)); // v
+   System.out.println(s.charAt(10)); // RE: StringIndexOutOfBoundException
+
+2. public String concat(String s);
+- The overloaded + and += operators also meant for concatenation purpose only.
+String s = "micro";
+s = s.concat("soft");
+s = s + "soft";
+s += "soft";
+  System.out.println(s); // microsoft
+ 
+3. public boolean equals(Object o);
+- To perform content comparison where case is important.
+- this is overriding version of Object class equals() method
+
+4. public boolean equalsIgnoreCase(String s);
+- To perform content comparison where case is not important
+e.g.
+String s = "java";
+  System.out.println(s.equals("JAVA")); // false
+  System.out.println(s.equalsIgnoreCase("JAVA")); // true
+
+# Note: In general we can use equalsIgnoreCase() method to validate usernames where case is not important whereas we can use equals() method to validate password where case is important.
+
+5. public String substring(int begin);
+- returns substring from begin index to end of the String.
+
+public String substring(int begin, int end);
+- returns substring from begin index to end-1 index.
+e.g.
+String s = "abcdefg";
+  System.out.println(s.substring(4)); // efg
+- System.out.println(s.substring(2, 5)); // cde
+
+6. public int length()
+- returns number of characters present in the string
+String s = "love";
+  System.out.println(s.length()); // 4
+
+# Note: length variable applicable for arrays but not for string objects whereas length() method applicable for string objects but not for arrays.
+
+7. public String replace(char oldCh, char newCh);
+e.g.
+String s = "ababa";
+   System.out.println(s.replace('a', 'b')); // bbbbb
+
+8. public String toUpperCase(); 
+9. public String toLowerCase();
+10. public String trim();
+- to remove the blank spaces present at beginning and end of the string but not middle blank spaces
+
+11. public int indexOf(char ch);
+- returns the index of first occurrence of specified character
+
+12. public int lastIndexOf(char ch);
+- returns the last index of specified character
+
+# Note: Because of runtime operation if there is change in the content then with those changes a new Object will be created on the heap. If there is no change in the content then existing object will be reused and new object won't be created.
+- Whether the object present in heap or SCP the rule is same.
+e.g.
+  class Test {
+  public static void main(String[] args) {
+  String s1 =  new String("hello");
+  String s2 = s1.toUpperCase();
+  String s3 = s1.toLowerCase();
+  System.out.println(s1 == s2);
+  System.out.println(s1 == s3);
+  }
+  } 
+- o/p:
+false
+true
+
+# How to create our own immutable class:
+- Once we create an object we can't perform any changes in that object. If we are trying to perform any changes and if there is a change in the content then with those changes a new object will be created. If there is no change in the content then existing object will be reused. This behavior is nothing but immutability
+- We can create our own immutable class
+e.g.
+  final public class StringImmutableDemo {
+  private int i;
+  StringImmutableDemo(int i){
+  this.i = i;
+  }
+  public StringImmutableDemo modify(int i){
+  if (this.i == i){
+  return this;
+  } else {
+  return (new StringImmutableDemo(i));
+  }
+  }
+  }
+
+class Test {
+public static void main(String[] args) {
+StringImmutableDemo demo1 = new StringImmutableDemo(1);
+StringImmutableDemo demo2 = demo1.modify(2);
+StringImmutableDemo demo3 = demo1.modify(1);
+System.out.println(demo1 == demo2);
+System.out.println(demo1 == demo3);
+}
+}
+o/p:
+false
+true
+
+- Once we create StringImmutableDemo object, we can't perform any change in the existing object. If we are trying to perform any change and if there is a change in content then with those changes a new object will be created and if there is no change in the content then existing object will be reused.
+
+# final vs immutability:
+- final applicable for variables but not for objects whereas immutability appicable for objects but not for variables.
+- By declaring a reference variable as final we won't get any immutability nature even though reference variable is final we can perform any type of change in the corresponding object but we can't perform reassignment for that variable
+e.g.
+final StringBuffer sb = "micro";
+sb.append("soft");
+System.out.println(sb);  // microsoft
+
+sb = new StringBuffer("solution");  // CE: cannot assign a value to final variable sb
+
+# StringBuffer:
+- If the content is fixed and won't change frequently then it is recommended to go for String.
+- If the content is not fixed and keep on changing then it is not recommended use string because for every change a new object will be created which affects performance of the system
+- To handle this requirement we should go for StringBuffer
+- The main advantage of StringBuffer over String is all required changes will be performed in the existing object only.
+
+1. StringBuffer sb = new StringBuffer();
+- creates an empty StringBuffer object with default initial capacity 16.
+- Once StringBuffer reaches its max capacity a new StringBuffer Object will be created with 
+NewCapacity = (CurrentCapacity + 1) * 2;
+
+2. StringBuffer sb = new StringBuffer(int initialcapacity);
+- creates an empty StringBuffer object with specified initial capacity
+
+3. StringBuffer sb = new StringBuffer(String s);
+- creates an equivalent StringBuffer for the given String with 
+capacity = s.length() + 16
+e.g.
+StringBuffer sb = new StringBuffer("love");
+System.out.println(sb.capacity);  // 20 (16 + 4)
+
+# Important methods of StringBuffer:
+1. public int length();
+2. public int capacity();
+3. public char charAt(int index);
+4. public void setCharAt(int index, char ch);
+   - To replace the character located at specified index with provided character.
+5. public StringBuffer append(String s);
+                             (int i), (long l), (char ch), (boolean b);
+6. public StringBuffer insert(int index, String s);
+7. public StringBuffer delete(int begin, int end);
+8. public StringBuffer deleteCharAt(int index);
+9. public StringBuffer reverse();
+10. public void setLength(int length);
+e.g.
+StringBuffer sb = new StringBuffer("ayeshaaa");
+sb.setLength(5);
+sopln(sb); // ayesha
+11. public void ensureCapacity(int capacity);
+- To increase capacity on fly based on our requirement
+e.g.
+StringBuffer sb = new StringBuffer();
+System.out.println(sb.capacity); // 16
+sb.ensureCapacity(1000);
+System.out.println(sb.capacity); // 1000
+
+12. public void trimToSize();
+  to deallocate extra allocated free memory
+    e.g.
+    StringBuffer sb = new StringBuffer(1000);
+    sb.append("abc");
+    sb.trimToSize();
+    System.out.println(sb.capacity); // 3
+
+
+# StringBuilder:
+- Every method present in StringBuffer is synchronized and hence only one thread is allowed to operate on StringBuffer object at a time which may creates performance problems.
+- To handle this requirement SUN people introduced StringBuilder concept in 1.5v
+- StringBuilder is exactly same as StringBuffer except the following the difference:
+
+StringBuffer                                                             StringBuilder
+-------------------------------------------------------------------------------------------------------------------------------------
+1. Every method present in StringBuffer is synchronized                  Every method present in StringBuffer is non-synchronized
+2. At a time only thread is allowed to operate on StringBuffer Object    At a time multiple threads are allowed to operate on StringBuilder Object hence StringBuilder is not thread safe
+and hence StringBuffer object is thread safe.
+3. Threads are required to wait to operate on StringBuffer object        Threads are not required to wait to operate on StringBuilder Object and hence relatively performance is high
+and hence relatively performance is low
+4. Introduced in 1.0v                                                    Introduced in 1.5v.
+
+
+# Note: Except above differences everything is same in StringBuffer and StringBuilder (including methods and constructors).
+
+# String vs StringBuffer vs StringBuilder:
+1. If the content is fixed and won't change frequently then we should go for String.
+2. If the content is not fixed and keep on changing but thread safety required then we should go for StringBuffer.
+3. If the content is not fixed and keep on changing but thread safety is not required then we should go for StringBuilder.
+
+# method chaining:
+- For most of the methods in String, StringBuffer and StringBuilder, return types are same type hence after applying a method and result we can call another method which forms method chaining.
+- In method chaining, method calls will be executed from left to right.
+
+# wrapper classes:
+- The main objectives of wrapper class are:
+1. To wrap primitive into object form so that we can handle primitives also just like objects
+2. To define several utility methods which are required for the primitives
+
+# How to create wrapper class:
+- Almost all wrapper classes contains two constructors, one can take corresponding primitive as argument and the other can take String as argument
+e.g.
+Integer I = new Integer(10);
+Integer I = new Integer("10");
+
+e.g.
+Double D = new Double(10.5);
+Double D = new Double("10.5");
+
+- If String argument not representing a number then we will get runtime exception saying NumberFormatException
+Integer I = new Integer("ten"); // RE: NumberFormatException
+
+- Float class contains 3 constructors with float or String or double
+e.g.
+Float f = new Float(10.5f);
+Float f = new Float("10.5f");
+Float f = new Float("10.5");
+Float f = new Float(10.5);
+
+- Character class contains only one constructor which can take char argument
+Character ch = new Character('a');
+
+- Boolean class contains two constructors one can take primitive as argument and other can take string argument
+- If we pass boolean primitive as argument the only allowed values are true or false where case is important and content is also important.
+- If we are passing String type as argument then case and content both are not important. 
+- If the content is case insensitive String of "true" then it is treated as true otherwise it is treated as false.
+
+Boolean B = new Boolean("true");  // true
+Boolean B = new Boolean("True");  // true
+Boolean B = new Boolean("TRUE");  // true
+Boolean B = new Boolean("malaika");  // false
+Boolean B = new Boolean("yes");  // false
+Boolean B = new Boolean("No");  // false
+
+# Note: In all wrapper classes, toString() method is overridden to return content directly and .equals() method is overridden for content comparison.
+
+# Utility methods:
+
+
+
+
+
+
+
 

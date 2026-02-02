@@ -181,19 +181,51 @@
 //}
 
 
-import java.lang.reflect.Method;
+//import java.lang.reflect.Method;
+//
+//class Test {
+//    public static void main(String[] args) {
+//        int count = 0;
+//        Object o = new String("Hello");
+//        Class c = o.getClass();
+//        System.out.println(c.getName());
+//        Method[] m = c.getDeclaredMethods();
+//        for (Method m1 : m) {
+//            count++;
+//            System.out.println(m1.getName());
+//        }
+//        System.out.println(count);
+//    }
+//}
 
-class Test {
-    public static void main(String[] args) {
-        int count = 0;
-        Object o = new String("Hello");
-        Class c = o.getClass();
-        System.out.println(c.getName());
-        Method[] m = c.getDeclaredMethods();
-        for (Method m1 : m) {
-            count++;
-            System.out.println(m1.getName());
-        }
-        System.out.println(count);
-    }
-}
+
+//class Test {
+//    public static void main(String[] args) {
+//        String s1 =  new String("hello");
+//        String s2 = s1.toUpperCase();
+//        String s3 = s1.toLowerCase();
+//        System.out.println(s1 == s2);
+//        System.out.println(s1 == s3);
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
