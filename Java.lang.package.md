@@ -594,8 +594,34 @@ Boolean B = new Boolean("No");  // false
 # Note: In all wrapper classes, toString() method is overridden to return content directly and .equals() method is overridden for content comparison.
 
 # Utility methods:
+1. valueOf()
+2. xxxValue()
+3. parseXxx()
+4. toString()
 
+# valueOf():
+- We can use valueOf() methods to create wrapper object for the given primitive or String.
 
+Form-1:
+- Every wrapper class except Character class contains static valueOf() method to create wrapper object for the given string
+public static wrapper valueOf(String s);
+Integer I = Integer.valueOf("10");
+Double D = Double.valueOf("10.5");
+Boolean B = Boolean.valueOf("love");
+
+Form-2:
+- Every Integral type wrapper class (Byte, Short, Integer, Long) contains the following valueOf() method to create wrapper object for the given specified radix String
+public static wrapper valueOf(String s, int radix);
+- The allowed range of radix is : 2 to 36
+e.g.
+  Integer I = Integer.valueOf("100", 2);   // 4
+  Integer I = Integer.valueOf("101", 4);   // 17
+
+Form-3:
+- Every wrapper class including Character class contains a static valueOf() method to create a wrapper object for the given primitive
+public static wrapper valueOf(primitive p);
+e.g.
+Integer
 
 
 

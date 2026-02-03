@@ -198,7 +198,7 @@ class Sample extends Adapter X
 - If we don't know anything about implementation, just we have requirement specification then we should go for interface.
 e.g. Servlet(I)
 
-- If we are talking aabout implementation but not completely (partial implementation) then we should go for abstract class.
+- If we are talking about implementation but not completely (partial implementation) then we should go for abstract class.
 e.g
 GenericServlet(AC)
 HttpServlet(AC)
