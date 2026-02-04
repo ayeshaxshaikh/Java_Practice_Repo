@@ -3,7 +3,7 @@
 - The main advantage of array is, we can represent multiple values by using single variable so that readability of the code will be improved.
 
 # Limitations of Array:
-- Arrays are fixed in size. once we creates an array there is no chance of increasing or decreasing the size based on our requirement.
+- Arrays are fixed in size. once we create an array there is no chance of increasing or decreasing the size based on our requirement.
 - Due to this to use arrays concept we must know the size in advance which may not possible always.\
 - Array can hold only homogeneous data type elements.
 e.g.
@@ -215,3 +215,197 @@ l.add(null);
 System.out.println(l);
 }
 }
+
+- Usually we can use collections to hold and transfer objects from one location to another location (container). To provide support for this requirement every collection class by default implements serializable and cloneable interfaces
+- ArrayList and Vector classes implements RandomAccess Interface so that any random element we can access with the same speed
+
+# RandomAccess:
+- RandomAccess interface present in java.util package, and it doesn't contain any methods. It is a marker interface where required ability will be provided automatically by the JVM
+- ArrayList is the best choice if our frequent operation is retrieval operation because ArrayList implements RandomAccess interface
+- ArrayList is the worst choice if our frequent operation is insertion or deletion in the middle.
+
+# ArrayList vs Vector:
+- Every method present in ArrayList is non-synchronized but every method present in Vector is synchronized
+- At a time multiple threads are allowed to operate on ArrayList object and hence it is not thread safe but at a time only one thread is allowed to operate on Vector object and hence it is thread safe
+- Relatively performance is high in ArrayList because threads are not required to wait to operate on ArrayList object. - Relatively performance is low in Vector because threads are required to wait to operate on Vector object. 
+- Introduced in 1.2v and ArrayList is non legacy. Vector introduced in 1.0v and it is legacy. 
+
+# How to get synchronized version of ArrayList object?
+- By default, ArrayList is non-synchronized, but we can get synchronized version of ArrayList object by using synchronizedList() method of Collections class
+public static List synchronizedList(List l);
+e.g.
+ArrayList al = new ArrayList();
+List l = Collections.synchronizedList(al);
+
+- Similarly, we can get synchronized version of set and map objects by using:
+public static Set synchronizedSet(Set s);
+public static Map synchronizedMap(Map m);
+
+# LinkedList:
+- The underlying data structure is double linkedList
+- Insertion order is preserved 
+- Duplicates objects are allowed
+- Heterogeneous Object are allowed
+- Null insertion is possible
+- LinkedList implements serializable and cloneable interfaces but not RandomAccess
+- LinkedList is the best choice if our frequent operation is insertion or deletion in the middle
+- LinkedList is the worst choice if our frequent operation is retrieval operation
+
+# LinkedList constructors:
+1. LinkedList l = new LinkedList();
+   - creates an empty LinkedList object
+2. LinkedList l = new LinkedList(Collection c);
+   - creates an equivalent LinkedList object for the given collection
+
+# LinkedList class specific method:
+- Usually we can LinkedList to develop stack and Queues
+- To provide support for this requirement LinkedList class defines the following specific methods:
+void addFirst(Object o);
+void addLast(Object o);
+Object getFirst();
+Object getLast()
+Object removeFirst()
+Object removeLast()
+
+# ArrayList vs LinkedList:
+- ArrayList is the best choice if our frequent operation is retrieval operation.
+- LinkedList is the best choice if our frequent operation is insertion or deletion in the middle
+- ArrayList is the worst choice if our frequent operation is insertion or deletion in the middle because internally several shift operations are performed 
+- LinkedList is the worst choice if our frequent operation is retrieval operation
+- In ArrayList elements will be stored in consecutive memory locations and hence retrieval operation will become easy
+- In LinkedList the elements won't be stored in consecutive memory locations and hence retrieval operation will become difficult
+
+# Vector:
+- The underlying data structure is resizable array or growable array
+- Insertion order is preserved
+- Duplicates are allowed
+- heterogeneous objects are allowed 
+- Null insertion is possible
+- It implements serializable, cloneable and RandomAccess interfaces
+- Every method present in the Vector is synchronized and hence Vector object is thread safe
+
+# Vector Constructor:
+1. Vector v = new Vector();
+- creates an empty vector object with default initial capacity 10
+- Once vector reaches its max capacity then a new Vector object will be created with 
+- New Capacity = Current capacity * 2
+
+2. Vector v = new Vector(int initialCapacity);
+- creates an empty vector object with specified initial capacity
+
+3. Vector v = new Vector(int initialCapacity, int incrementCapacity);
+
+4. Vector v = new Vector(Collection c);
+- creates an equivalent Vector object for given collection
+- This constructor meant for interconversion between collection objects 
+
+# Vector specific methods:
+add(Object o) --> Collection
+add(int index, Object o) --> List
+addElement(Object o) --> Vector
+remove(Object o) --> Collection
+removeElement(Object o) --> Vector
+remove(int index) --> List
+removeElementAt(int index) --> Vector
+clear() --> Collection
+removeAllElements() --> Vector
+Object get(int index) --> List
+Object elementAt(int index) --> Vector
+Object firstElement() --> Vector
+Object lastElement() --> Vector
+int size()
+int capacity()
+Enumeration elements()
+
+# Stack:
+- It is the child class of Vector
+- It is a specially designed class for Last-in-first-out order
+Stack s = new Stack();
+methods:
+Object push(Object o)
+    - to insert an object into the stack
+Object pop()
+    - to remove and return top of the stack
+Object peek()
+    - to return top of the stack without removal
+boolean empty()
+    - returns true if the stack is empty
+int search(Object o)
+    - returns offset if the element is available otherwise returns -1
+
+# The 3 cursors of Java:
+- If we want to get Objects one by one from the collection then we should go for cursor
+- there are 3 types of cursors available in java
+1. Enumeration
+2. Iterator
+3. ListIterator
+
+# Enumeration:
+- we can use enumeration to get objects one by one from legacy collection object
+- we can create enumeration object by using elements() method of Vector class
+public Enumeration elements();
+e.g.
+Enumeration e = v.element();
+-methods:
+public boolean hasMoreElement();
+public Object nextElement();
+
+# Limitations of Enumeration:
+- We can apply enumeration concept only for legacy classes and it is not a universal cursor
+- By using enumeration we can get only read access and we can't perform remove operation
+- To overcome above limitations we should go for Iterator
+
+# Iterator:
+- We can apply Iterator concept for any Collection object and hence it is universal cursor
+- By using Iterator we can perform both read and remove operations
+- We can create Iterator Object by using iterator() method of Collection interface
+public Iterator iterator();
+e.g.
+Iterator itr = c.iterator();  c --> any collection object
+- methods:
+public boolean hasNext()
+public Object next()
+public void remove()
+
+# Limitations of Iterator:
+- By using Enumeration and Iterator we can always move only towards forward direction and we can't move towards backward direction
+- These are single direction cursors but not bidirectional cursor
+- By using Iterator we can perform only read and remove operation, and we can't perform replacement or addition of new Objects
+- To overcome above limitations we should go for ListIterator
+
+# ListIterator:
+- By using ListIterator we can move either to the forward direction or to the backward direction 
+- Hence, it is bidirectional cursor
+  - By using ListIterator we can perform replacement or addition of new Objects in addition to read and remove operation
+  public ListIterator listIterator();
+  e.g.
+  ListIterator ltr = l.ListIterator();  l --> any list object
+- ListIterator(I) is the child interface of Iterator(I) and hence all method present in Iterator by default available to the ListIterator
+
+# methods:
+- ListIterator defines the following 9 methods:
+public boolean hasNext()
+public Object next()
+public int nextIndex()
+
+public boolean hasPrevious()
+public Object previous()
+public int previousIndex()
+
+public void remove()
+public void add(Object o)
+public void set(Object o)
+
+- The most powerful cursor is ListIterator but its limitation is it is applicable only for List objects
+
+
+Property                         Enumeration                                        Iterator                      ListIterator
+----------------------------------------------------------------------------------------------------------------------------------
+Where we can apply               Only for legacy classes                            For any Collection object     Only for List objects
+Is it legacy                     yes (1.0v)                                         No (1.2v)                     No (1.2v)
+Movement                         Single direction (only forward direction)          Single direction (forward)    Bidirectional
+Allowed Operations               Only read                                          Read / Remove                 Read / remove / replace / add
+How we can get                   By using elements() of Vector class                iterator() of Collection(I)   listIterator() of List(I)
+methods                          2 methods                                          3 methods                     9 methods
+                                 hasMoreElements()                                  hasNext()
+                                 nextElement()                                      next(), remove()
