@@ -409,3 +409,251 @@ How we can get                   By using elements() of Vector class            
 methods                          2 methods                                          3 methods                     9 methods
                                  hasMoreElements()                                  hasNext()
                                  nextElement()                                      next(), remove()
+
+# Set:
+Collect(I) 1.2v --> Set(I) 1.2v --> HashSet 1.2v --> LinkedHashSet 1.2v
+                                    SortedSet 1.2v --> NavigableSet 1.6v --> TreeSet 1.2v
+
+- Set is child interface of Collection
+- If we want to represent a group of individual objects as a single entity where duplicates are not allowed and insertion order not preserved
+- Set interface doesn't contain any new method and we have to use only Collection interface methods
+
+# HashSet:
+- The underlying data structure is Hashtable 
+- Duplicate objects are not allowed
+- Insertion order not preserved, and it is based on hashcode of objects
+- Null insertion is possible (only once)
+- Heterogeneous objects are allowed
+- Implements serializable, cloneable but not RandomAccess interface
+- HashSet is the best choice if our frequent operation is search operation
+
+# Note: In HashSet duplicates are not allowed if we are trying to insert duplicates then we won't get any compile time or runtime errors and add() method simply returns false
+e.g.
+HashSet h = new HashSet();
+System.out.println(h.add("A"));  // true
+System.out.println(h.add("A"));  // false
+
+# Constructors:
+HashSet h = new HashSet();
+- creates an empty HashSet object with default initial capacity 16 and default fill ratio 0.75
+
+HashSet h = new HashSet(int initialCapacity);
+- creates an empty HashSet object with specified initial capacity and default fill ratio 0.75
+
+HashSet h = new HashSet(int initialCapacity, float fillRatio);
+
+HashSet h = new HashSet(Collection c);
+- creates an equivalent HashSet for given collection
+- This constructor meant for interconversion between Collection objects
+
+# Fill Ratio or Load Factor:
+- After filling how much ratio, a new HashSet object will be created, this ratio is called fill ratio or load factor
+- fill ratio 0.75 means, after filling 75% ratio a new HashSet object will be created
+
+e.g.
+import java.util.HashSet;
+
+class HashSetDemo {
+public static void main(String[] args) {
+HashSet h = new HashSet();
+h.add("A");
+h.add("Z");
+h.add("C");
+h.add(null);
+h.add(20);
+System.out.println(h.add("D"));
+System.out.println(h);
+}
+}
+o/p:
+true
+[null, A, C, 20, D, Z]
+
+# LinkedHashSet:
+- It is the child class of HashSet
+- It is exactly same as HashSet (including constructors and methods) except the following differences:
+
+HashSet                                         LinkedHashSet
+-----------------------------------------------------------------------------
+The underlying data structure is Hashtable      The underlying data structure is the combination of LinkedList and Hashtable
+Insertion order not preserved                   Insertion order preserved
+Introduced in 1.2v                              Introduced in 1.4v
+
+- In the above HashSet program If we replace HashSet with LinkedHashSet then output is [A, Z, C, null, 20, D] that is insertion order is preserved
+# Note: In general we can use LinkedHashSet to develop cache based application where duplicates are not allowed and insertion order preserved.
+
+# SortedSet:
+- It is the child interface of Set
+- If we want to represent a group of individual objects as a single entity according to some sorting order without duplicates then we should go for SortedSet.
+- SortedSet interface defines the following specific methods:
+Object first();
+  - returns the first element of SortedSet
+Object last();
+  - returns the last element of SortedSet.
+SortedSet headSet(Object o)
+  - returns SortedSet whose elements are less than o.
+SortedSet tailSet(Object o)
+  - returns SortedSet whose elements are >= o
+SortedSet subSet(Object obj1, Object obj2)
+  - returns SortedSet whose elements are >= obj1 and < obj2
+Comparator comparator();
+  - returns Comparator object that describes underlying sorting technique. If we are using default natural sorting order then we will get null
+
+# Note: The default natural sorting order for numbers ascending order and for String objects alphabetical order
+
+# TreeSet:
+- It is the child class of NavigableSet
+- The underlying data structure is balanced tree
+- Duplicate objects are not allowed
+- Insertion order not preserved
+- Heterogeneous Objects are not allowed otherwise we will get runtime exception ClassCastException
+- Null insertion possible (only once)
+- Implements serializable and cloneable but not RandomAccess
+- All objects will be inserted based on some sorting order it may be default natural sorting order or customized sorting order.
+
+# Constructors:
+TreeSet t = new TreeSet();
+    creates an empty TreeSet object where the elements will be inserted according to default natural sorting order
+
+TreeSet t = new TreeSet(Comparator c);
+    Creates an empty TreeSet object where the elements will be inserted according to customized sorting order specified by Comparator objects
+
+TreeSet t = new TreeSet(Collection c);
+TreeSet t = new TreeSet(SortedSet s);
+
+e.g.
+import java.util.TreeSet;
+
+class TreeSetDemo {
+public static void main(String[] args) {
+TreeSet ts = new TreeSet();
+ts.add("A");
+ts.add("B");
+ts.add("a");
+ts.add("Z");
+ts.add("C");
+//        ts.add(new Integer(10));
+//        ts.add(null);
+System.out.println(ts);
+}
+}
+[A, B, C, Z, a]
+
+# null acceptance:
+- For non-empty TreeSet If we are trying to insert null then we will get NullPointerException
+- For empty TreeSet, as a first element null is allowed but after inserting that null if we are trying to insert any other, then we will get runtime exception saying NullPointerException
+
+# Note: Until 1.6v null is allowed as first element to the empty TreeSet but from 1.7v onwards null is not allowed even as a first element.
+
+e.g.
+class TreeSetDemo {
+public static void main(String[] args) {
+TreeSet t = new TreeSet();
+t.add(new StringBuffer("A"));
+t.add(new StringBuffer("B"));
+t.add(new StringBuffer("C"));
+System.out.println(t);
+}
+}
+[A, B, C]
+
+# Comparable(I):
+- It is present in java.lang package, and it contains only one method compareTo()
+public int compareTo(Object obj);
+- obje1.compareTo(obj2)
+- returns -ve if obj1 has to come before obj2.
+- returns +ve if obj1 has to come after obj2.
+  - returns 0 if obj1 and obj2 are equal.
+e.g.
+    class CompareToDemo {
+    public static void main(String[] args) {
+    System.out.println("A".compareTo("D"));
+    System.out.println("K".compareTo("A"));
+    System.out.println("A".compareTo("A"));
+    }
+    }
+
+-3
+10
+0   
+
+- If we are depending on default natural sorting order then while adding objects into the TreeSet JVM will call compareTo() method
+e.g.
+TreeSet t = new TreeSet();
+t.add("K"); 
+t.add("Z"); // +ve "Z".compareTo("K");
+t.add("A"); // -ve "A".compareTo("Z");
+t.add("A"); // 0 "A".compareTo("A");
+System.out.println(t); // [A, K, Z]
+
+# Note: If default natural sorting order not available or if we are not satisfied with default natural sorting order then we can go for customized sorting by using Comparator.
+
+# Comparable meant for Default natural sorting order whereas Comparator meant for customized sorting order  
+
+# Comparator:
+- Comparator present in java.util package, and it defines two methods compare() and equals()
+public int compare(Object ob1, Object obj2);
+- returns -ve if obj1 has to come before obj2.
+- returns +ve if obj1 has to come after obj2.
+    - returns 0 if obj1 and obj2 are equal.
+
+public boolean equals(Object obj);
+
+- Whenever we are implementing Comparator interface we must provide implementation only for compare() method, and we are not required to provide implementation for equals() method because it is already available to our class from Object class through inheritance
+
+- Write a program to insert an integer object into the TreeSet where the Sorting order is descending order
+e.g.
+  class ComparatorDemo {
+  public static void main(String[] args) {
+  TreeSet t = new TreeSet(new MyComparator());
+  t.add(10);
+  t.add(20);
+  t.add(30);
+  t.add(0);
+  t.add(5);
+  System.out.println(t);
+  }
+  }
+  class MyComparator implements Comparator {
+  public int compare(Object o1, Object o2) {
+  Integer i1 = (Integer)o1;
+  Integer i2 = (Integer)o2;
+  if (i1 < i2) {
+  return 1;
+  } else if (i1 > i2) {
+  return -1;
+  } else  {
+  return 0;
+  }
+  }
+  }
+  [30, 20, 10, 5, 0]
+
+- If we are not passing new MyComparator() as argument then internally JVM will call compareTo() method which is meant for default natural sorting order
+- In this case the output is [0, 5, 10, 20, 30]
+
+# Various possible implementation of compare():
+class ComparatorDemo {
+public static void main(String[] args) {
+TreeSet t = new TreeSet(new MyComparator());
+t.add(10);
+t.add(20);
+t.add(30);
+t.add(0);
+t.add(5);
+System.out.println(t);
+}
+}
+class MyComparator implements Comparator {
+public int compare(Object o1, Object o2) {
+Integer i1 = (Integer)o1;
+Integer i2 = (Integer)o2;
+return i1.compareTo(i2);  // Default natural sorting order [0, 5, 10, 20, 30]
+return -i1.compareTo(i2); // Descending order [30, 20, 10,5, 0]
+return i2.compareTo(i1);  // Descending order [30, 20, 10, 5, 0]
+return -i2.compareTo(i1); // Ascending order [0, 5, 10, 20, 30]
+return +1; // Insertion order [10, 20, 30, 0, 5]
+return -1; // Reverse insertion order [5, 0, 30, 20, 10]
+return 0;  // only first element will be inserted and remaining are considered as duplicates [10]
+}
+}
