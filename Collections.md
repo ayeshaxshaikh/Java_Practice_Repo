@@ -657,3 +657,328 @@ return -1; // Reverse insertion order [5, 0, 30, 20, 10]
 return 0;  // only first element will be inserted and remaining are considered as duplicates [10]
 }
 }
+
+# Write a program to insert String object into the TreeSet where all elements should be inserted according to reverse of alphabetical order
+class ComparatorDemo {
+public static void main(String[] args) {
+TreeSet t = new  TreeSet(new MyComparator());
+t.add("Rama");
+t.add("Ramsha");
+t.add("Ayesha");
+t.add("Junaid");
+System.out.println(t);
+}
+}
+class MyComparator implements Comparator{
+public int compare(Object o1, Object o2) {
+String s1 = (String) o1;
+String s2 = (String)o2;
+return s2.compareTo(s1);
+}
+}
+
+# Write a program to insert StringBuffer object into the TreeSet where sorting order is alphabetical order.
+class ComparatorDemo {
+public static void main(String[] args) {
+TreeSet t = new  TreeSet(new MyComparator());
+t.add(new StringBuffer("A"));
+t.add(new StringBuffer("Z"));
+t.add(new StringBuffer("L"));
+t.add(new StringBuffer("P"));
+System.out.println(t);
+}
+}
+class MyComparator implements Comparator{
+public int compare(Object o1, Object o2) {
+String s1 = o1.toString();
+String s2 = o2.toString();
+return s1.compareTo(s2);
+}
+}
+
+# Note: If we are depending on default natural sorting order, then object should be homogeneous and comparable otherwise we will get runtime exception saying ClassCastException.
+# If we are defining our own sorting by Comparator then Objects need not be comparable or homogeneous. We can add heterogeneous and non-comparable objects also
+
+
+# Write a program to insert String and StringBuffer objects into TreeSet where sorting order is increasing length order. If two objects having same length then consider their alphabetical order
+class ComparatorDemo {
+public static void main(String[] args) {
+TreeSet ts = new TreeSet(new MyComparator());
+ts.add("A");
+ts.add(new StringBuffer("ABC"));
+ts.add(new StringBuffer("AA"));
+ts.add("XX");
+ts.add("ABCD");
+ts.add("A");
+System.out.println(ts);
+}
+}
+class MyComparator implements Comparator {
+public int compare(Object o1, Object o2) {
+String s1 = o1.toString();
+String s2 = o2.toString();
+int l1 = s1.length();
+int l2 = s2.length();
+if (l1 < l2)  {
+return -1;
+} else if (l1 > l2) {
+return 1;
+} else {
+return s1.compareTo(s2);
+}
+}
+}
+[A, AA, XX, ABC, ABCD]
+
+# Comparable vs Comparator:
+1. For predefined Comparable classes, default natural sorting order already available. If we are not satisfied with that default natural sorting order then we can define our own sorting by using Comparator
+2. For predefined non-comparable classes like StringBuffer, we can define our own sorting by using Comparator
+3. For our own classes like Employee, the person who is writing the class is responsible to define default natural sorting order by implementing comparable interface
+4. The person who is using our class, if he is not satisfied with default natural sorting order then he can define his own sorting by using Comparator.
+e.g.
+   class Employee implements Comparable {
+   String name;
+   int eId;
+   Employee(String name, int eId) {
+   this.name = name;
+   this.eId = eId;
+   }
+   public String toString() {
+   return name + "__" + eId;
+   }
+   public int compareTo(Object o) {
+   int eId1 = this.eId;
+   Employee e = (Employee) o;
+   int eId2 = e.eId;
+   if (eId1 < eId2) {
+   return -1;
+   }  else if (eId1 > eId2) {
+   return 1;
+   } else  {
+   return 0;
+   }
+   }
+   }
+   class ComparableEmployee {
+   public static void  main(String[] args) {
+   TreeSet ts = new TreeSet();
+   Employee e1 = new Employee("Jack", 102);
+   Employee e2 = new Employee("Jill", 50);
+   Employee e3 = new Employee("John", 110);
+   Employee e4 = new Employee("Jane", 30);
+   ts.add(e1);
+   ts.add(e2);
+   ts.add(e3);
+   ts.add(e4);
+   System.out.println(ts);
+   }
+   }
+   [Jane__30, Jill__50, Jack__102, John__110]
+
+e.g.
+class Employee {
+String name;
+int eId;
+Employee(String name, int eId) {
+this.name = name;
+this.eId = eId;
+}
+public String toString() {
+return name + "__" + eId;
+}
+}
+class ComparatorEmployee {
+public static void  main(String[] args) {
+TreeSet ts = new TreeSet(new MyComparator());
+Employee e1 = new Employee("Jack", 102);
+Employee e2 = new Employee("Ayesha", 50);
+Employee e3 = new Employee("Junaid", 110);
+Employee e4 = new Employee("Reema", 30);
+ts.add(e1);
+ts.add(e2);
+ts.add(e3);
+ts.add(e4);
+System.out.println(ts);
+}
+}
+class MyComparator implements Comparator {
+public int compare(Object o1, Object o2) {
+Employee e1 = (Employee) o1;
+Employee e2 = (Employee) o2;
+String name1 = e1.name;
+String name2 = e2.name;
+return name1.compareTo(name2);
+}
+}
+[Ayesha__50, Jack__102, Junaid__110, Reema__30]
+
+Comparable                                                              Comparator
+-----------------------------------------------------------------------------------------------------------------------------------
+It is meant for default natural sorting order                           It is meant for customized sorting order
+Present in java.lang package                                            Present in java.util package
+It defines only one method compareTo()                                  It defines two methods compare() and equals()
+String and all wrapper classes implements Comparable interface          The only implemented classes of Comparator are Collator and RuleBasedCollator
+
+
+Property                             HashSet                    LinkedHashSet                        TreeSet
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Underlying Data Structure            Hashtable                  LinkedList + Hashtable               Balanced tree
+Duplicates Objects                   Not allowed                Not allowed                          Not allowed                  
+Insertion order                      Not preserved              Preserved                            Not Prserved
+Sorting order                        Not applicable             Not applicable                       Applicable
+Heterogeneous Objects                Allowed                    Allowed                              Not allowed
+null acceptance                      Allowed                    Allowed                              for empty TreeSet as a first element null is allowed until 1.6v
+
+
+# Map:
+        Map(I) 1.2 v -------> HashMap 1.2v -----> LinkedHashMap 1.4v
+                              IdentityHashMap 1.4v 
+                              WeakHashMap 1.2v
+                              SortedMap(I) 1.2v -----> NavigableMap(I) 1.6v ----> TreeMap 1.2v
+    Dictionary(AC) 1.0v ----> Hashtable 1.0v -----> Properties 1.0v
+
+- Map is not child interface of collection.
+- If we want to represent a group of object as key-value pairs then we should go for map.
+- Both keys and values are objects only
+- Duplicate keys are not allowed but values can be duplicated 
+- Each key value pair is called entry hence map is considered as a collection of entry objects
+
+# Map(I) methods:
+1. Object put(Object key, Object value);
+    - To add one key-value pair to the map
+    - If the key is already present then old value will be replaced with new value and returns old value
+    e.g. 
+    m.put(101, "love"); --> returns null
+    m.put(102, "Ayesha") --> returns null
+    m.put(101, "Junaid") --> returns love
+2. void putAll(Map m);
+3. Object get(Object key);  --> returns the value associated with specified key
+4. Object remove(Object key);
+5. boolean containsKey(Object key);
+6. boolean containsValue(Object value);
+7. boolean isEmpty();  
+8. int size();
+9. void clear();
+
+10. Set keySet() 
+11. Collection values()
+12. set entrySet()
+- These three methods considered as Collection views of map
+
+# Entry(I):
+- A map is a group of key-value pairs and each key-value pair is called an entry hence map is considered as Collection of entry objects
+- Without existing map object there is no chance of existing entry object hence entry interface is define inside map interface
+
+interface Map {
+    interface Entry {
+        Object getKey()
+        Object getValues()
+        Object setValue(Object new)
+    }
+}
+- Entry specific methods we can apply only on Entry Object
+
+# HashMap():
+- The underlying data structure is Hashtable
+- Insertion order is not preserved, and it is based on hashcode of keys
+- Duplicate keys are not allowed but values can be duplicated
+- Heterogeneous objects are allowed for both key and value
+- null is allowed for key (only once)
+- null is allowed for values (any number of times)
+- HashMap implements serializable and cloneable interfaces but not RandomAccess
+- HashMap is the best choice if our frequent operation is searching
+
+1. HashMap m = new HashMap();
+    - creates an empty HashMap object with default initial capacity 16 and default fill ratio 0.75
+2. HashMap m = new HashMap(int initialCapacity);
+    - Creates an empty HashMap object with specified initial capacity and default fill ratio 0.75
+3. HashMap m = new HashMap(int initialCapacity, float fillRatio);
+4. HashMap m = new HashMap(Map m);
+
+# HashMap                                                           Hashtable:
+------------------------------------------------------------------------------------------------------------------------------------
+1. Every method present in HashMap is non-synchronized              Every method present in Hashtable is synchronized
+2. At a time multiple threads are allowed to operate on HashMap     At a time only one thread is allowed to operate on Hashtable and hence it is thread safe
+objects and hence it is not thread safe
+3. Relatively performance is high because threads are not           Relatively performance is low because threads are required to wait to operate on Hashtable object
+required to wait to operate on HashMap objects
+4. null is allowed for both key and value                           null is not allowed for keys and values otherwise we will get NullPointerException
+5. Introduced in 1.2v, and it is not legacy                          Introduced in 1.0v and it is legacy
+
+
+# How to get synchronized version of HashMap object
+By default, HashMap is non-synchronized, but we can get synchronized version of HashMap by using synchronizedmap() method of Collections class
+e.g.
+HashMap m = new HashMap();
+Map m1 = new Collections.synchronizedmap(m);
+
+# LinkedHashMap:
+- It is the child class of HashMap.
+- It is exactly same as HashMap (including methods and constructors) except the following difference:
+
+HashMap                                                                         LinkedHashMap
+----------------------------------------------------------------------------------------------------------------------------------
+1. The underlying data structure is Hashtable                                   Underlying data structure is a combination of LinkedList and Hashtable
+2. Insertion order is not preserved, and it is based on HashCode of keys        Insertion order is preserved
+3. Introduced in 1.2v                                                           Introduced in 1.4v
+
+# Note: LinkedHashSet and LinkedHashMap are commonly used for developing cache based application
+
+# In general == operator meant for reference comparison (address comparison) whereas .equals() method meant for content comparison
+
+# IdentityHashMap:
+- It is exactly same as HashMap (including methods and Constructors) except the following difference:
+    - In the case of normal HashMap JVM will use .equals() method to identify duplicate keys, which is meant for content comparison
+    - But in the case of IdentityHashMap, JVM will use == operator to identify duplicate keys, which is meant for reference comparison (address comparison)
+e.g.
+HashMap m = new HashMap();
+Integer I1 = new Integer(10);
+Integer I2 = new Integer(10);
+m.put(I1, "pawan");
+m.put(I2, "kalyan");
+System.out.println(m); // {10=kalyan}
+    - I1 and I2 are duplicate keys because I1.equals(I2) returns true
+
+- If we replace HashMap with IdentityHashMap then I1 and I2 are not duplicate keys because I1 == I2 returns false
+- In this case output is
+{10=pawan, 10=kalyan}
+
+
+# WeakHashMap:
+- It is exactly same as HashMap except the following differences:
+- In the case of HashMap even though Object doesn't have any reference, it is not eligible for garbage collection if it is associated with HashMap that means HashMap dominates garbage collector
+- But in the case of WeakHashMap, if Object doesn't contain any references it is eligible for garbage collection even if the object associated with the WeakHashMap that means garbage collector dominates WeakHashMap
+
+e.g.
+import java.util.HashMap;
+
+class WeakHashMap
+{
+public static  void main(String[] args) throws Exception
+{
+HashMap m = new HashMap();
+Temp t = new Temp();
+m.put(t,"love");
+System.out.println(m);
+t = null;
+System.gc();
+Thread.sleep(4000);
+System.out.println(m);
+}
+}
+class Temp
+{
+public String toString()
+{
+return "temp";
+}
+}
+- In the above example Temp Object not eligible for garbage collection because it is associated with HashMap
+- In this case output is :
+{temp=love}
+{temp=love}
+
+- In the above program if we replace HashMap with WeakHashMap then Temp object eligible for garbage collection
+- In this case output is 
+{temp=love}
+{}
