@@ -982,3 +982,132 @@ return "temp";
 - In this case output is 
 {temp=love}
 {}
+
+# SortedMap:
+- It is the child interface of Map 
+- If we want to represent a group of Objects as key-value pairs according to some sorting order of keys then we should go for SortedMap
+- Sorting is based on keys but not based on values
+- SortedMap defines the following specific methods:
+Object firstKey();
+Object lastKey();
+SortedMap headMap(Object key);
+SortedMap tailMap(Object key);
+SortedMap subMap(Object key1, Object key2);
+Comparator comparator();
+
+# TreeMap:
+- The underlying data structure is RED-BLACK tree
+- Insertion order is not preserved, and it is based on some sorting order of keys 
+- Duplicate keys are not allowed but values can be duplicated
+- If we are depending on default natural sorting order then keys should be Homogeneous and Comparable otherwise we will get runtime exception saying ClassCastException
+- If we are defining our own sorting by Comparator then keys need not be Homogeneous and Comparable, we can take heterogeneous and non-comparable also
+- Whether we are depending on default natural sorting order or customized sorting order, there are no restrictions for values, we can take heterogeneous and non-comparable objects also
+
+# null acceptance:
+- For non-empty TreeMap If we are trying to insert null then we will get NullPointerException
+- For empty TreeMap, as a first element null is allowed but after inserting that null if we are trying to insert any other, then we will get runtime exception saying NullPointerException
+- But this rule is applicable until 1.6v. 
+- From 1.7v onwards null is not allowed for key
+- But for values we can use null any number of times.
+
+# TreeMap constructors:
+TreeMap tm = new TreeMap(); --> for default natural sorting order
+TreeMap tm = new TreeMap(Comparator c); --> for customized sorting order
+TreeMap tm = new TreeMap(SortedMap m);
+TreeMap tm = new TreeMap(Map m);
+
+# Hashtable:
+- The underlying data structure for Hashtable is Hashtable
+- Insertion order is not preserved, and it is based on Hashcode of keys
+- Duplicate keys are not allowed and values can be duplicated
+- Heterogeneous objects are allowed for both keys are values
+- Null is not allowed for both key and value Otherwise we will get runtime exception saying NullPointerException
+- It implements Serializable and cloneable interfaces but not RandomAccess
+- Every method present in Hashtable is synchronized and hence Hashtable object is thread safe
+- Hashtable is the best choice if our frequent operation is search operation
+
+# Hashtable constructors:
+Hashtable ht = new Hashtable(); --> creates an empty Hashtable object with default initial capacity 11 and default fill ratio 0.75
+Hashtable ht = new Hashtable(int initialCapacity);
+Hashtable ht = new Hashtable(int initialCapacity, float fillRatio);
+Hashtable ht = new Hashtable(Map m);
+e.g.
+import java.util.Hashtable;
+
+class HashtableDemo{
+public static void main(String[] args){
+Hashtable h = new Hashtable();
+h.put(new TempDemo(5), "A");
+h.put(new TempDemo(2), "B");
+h.put(new TempDemo(6), "C");
+h.put(new TempDemo(15), "D");
+h.put(new TempDemo(23), "E");
+System.out.println(h);
+}
+}
+class TempDemo {
+int i;
+TempDemo(int i){
+this.i = i;
+}
+public String toString(){
+return i + "";
+}
+public int hashCode(){
+return i;
+}
+}
+{6=C, 5=A, 15=D, 2=B, 23=E}
+
+# Properties:
+- In our program, if anything which changes frequently (like username, password, mailIds, mobile numbers, etc.) are not recommended to hard-code in java program because if there is any change to reflect that change recompilation, rebuild, redeploy application are required
+- Even sometimes server restart also requires which creates a big business impact to the client
+- We can overcome this problem by using Properties file, such type of variable things we have to configure in the properties file
+- From that Properties file we have to read into Java program, and we can use those properties
+- The main advantage of this approach is, if there is a change in Properties file, to reflect that change just redeployment is enough, which won't create any business impact to the client
+- We can use java properties object to hold properties which are coming from properties file
+- In normal map (HashMap, TreeMap, Hashtable), key and value can be of any type but In the case of Properties key and value should be String type
+
+Properties p = new Properties();
+
+methods:
+String setProperty(String pname, String pvalue); --> To set a new property. If the specified property already available then old value will be replaced with new value and returns old value
+String getProperty(String pname); --> to get value associated with the specified property. If the specified property not available then this will return null
+Enumeration propertyNames(); 
+void load(InputStream is); --> To load properties from properties file into java properties object
+void store(OutputStream os, String comment); 
+    to store properties from java properties object into properties file
+
+# Queue(I): (1.5v enhancement)
+- It is the child interface of Collection
+- If we want to represent a group of objects prior to processing then we should go for Queue
+- For example before sending sms message all mobile numbers we have to store in some data structures. In which order we added mobile numbers in the same order only message will be delivered.
+- for this first in first out requirement Queue is the best choice
+- Usually Queue follows first in first out order but based on our requirement we can implement our own priority order also (priority queue)
+- From 1.5v onwards, LinkedList class also implements Queue interface
+- LinkedList based implementation of Queue always follows FIFO order 
+
+# Queue(I) specific methods:
+boolean offer(Object o); --> To add an object into the queue
+Object peek(); --> to return head element of the queue. if queue is empty then this method returns null
+Object element(); --> to return head element of the queue. If queue is empty then we will get RE: NoSuchElementException
+Object poll(); --> to remove and return head element of the queue. If queue is empty then this method returns null.
+object remove() --> to remove and return head element of the queue. If queue is empty then we will get RE: NoSuchElementException
+
+# PriorityQueue:
+- If we want to represent a group of individual objects prior to processing according to some priority then we should go for PriorityQueue
+- the priority can be either default natural sorting order or customized sorting order defined by Comparator.
+- Insertion order is not preserved, and it is based on some priority
+- Duplicate objects are not allowed
+- If we are depending on default natural sorting order, then the object should be homogeneous and comparable otherwise we will get Runtime exception saying ClassCastException
+- If we are defining our own sorting by Comparator then objects need not be Homogeneous and Comparable
+- null is not allowed
+
+PriorityQueue pq = new PriorityQueue(); -->  default initial capacity 11, and all objects will be inserted according default natural sorting order
+PriorityQueue pq = new PriorityQueue(int initialCapacity); 
+PriorityQueue pq = new PriorityQueue(int initalCapacity, Comparator c);
+PriorityQueue pq = new PriorityQueue(SortedSet s);
+PriorityQueue pq = new PriorityQueue(Collection c);
+
+# Note: Some platforms won't provide proper support for thread priorities and PriorityQueues
+
