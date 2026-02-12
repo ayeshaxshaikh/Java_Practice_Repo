@@ -1111,3 +1111,343 @@ PriorityQueue pq = new PriorityQueue(Collection c);
 
 # Note: Some platforms won't provide proper support for thread priorities and PriorityQueues
 
+# 1.6v Enhancements in Collection Framework:
+- As a part of 1.6v the following 2 concepts introduced in 1.6v:
+1. NavigableSet
+2. NavigableMap
+
+# NavigableSet:
+- It is the child interface of SortedSet, and it defines several methods for navigation purposes
+
+methods:
+floor(e); --> it returns highest element which is <= e
+lower(e); --> it returns highest element which is < e
+ceiling(e); --> it returns lowest element which is >= e
+higher(e); --> it returns lowest element which is > e
+pollFirst(); --> removes and return first element
+pollLast(); --> remove and return last element
+descendingSet(); --> it returns NavigableSet in reverse order
+
+e.g.
+import java.util.TreeSet;
+
+class NavigableSetDemo{
+public static void main(String[] args){
+TreeSet<Integer> ts = new TreeSet<Integer>();
+ts.add(100);
+ts.add(200);
+ts.add(300);
+ts.add(400);
+ts.add(500);
+System.out.println(ts); // [100, 200, 300, 400, 500]
+System.out.println(ts.first()); // 100
+System.out.println(ts.last()); // 500
+System.out.println(ts.pollFirst()); // 100
+System.out.println(ts.pollLast()); // 500
+System.out.println(ts.ceiling(200)); // 200
+System.out.println(ts.floor(200)); // 200
+System.out.println(ts);  // [200, 300, 400]
+}
+}
+
+# NavigableMap:
+- NavigableMap is the child interface of SortedMap
+- It defines several methods for navigation purposes
+
+methods:
+floorKey(e); --> it returns highest element which is <= e
+lowerKey(e); --> it returns highest element which is < e
+ceilingKey(e); --> it returns lowest element which is >= e
+higherKey(e); --> it returns lowest element which is > e
+pollFirstEntry(); --> removes and return first element
+pollLastEntry(); --> remove and return last element
+descendingMap(); --> it returns NavigableMap in reverse order
+
+# Collections:
+- Collections class defines several utility methods for Collection object like sorting, searching, reversing etc. 
+
+# Sorting elements of List:
+- Collections class defines 2 sort() methods:
+public static void sort(List l);
+  - To sort based on default natural sorting order
+  - In this case List should contain homogeneous and comparable objects otherwise we will get RE: ClassCastException
+  - List should not contain null otherwise we will get NullPointerException
+
+public static void sort(List l, Comparator c);
+    - To sort based on customized sorting order
+
+e.g.
+import java.util.ArrayList;
+import java.util.Collections;
+
+class CollectionsSortDemo{
+public static void main(String[] args){
+ArrayList l = new ArrayList();
+l.add("K");
+l.add("Y");
+l.add("E");
+l.add("S");
+Collections.sort(l);
+System.out.println(l);
+}
+}
+[E, K, S, Y]
+
+e.g.
+class CollectionsCustomizedSortDemo{
+public static void main(String[] args){
+ArrayList l = new ArrayList();
+l.add("K");
+l.add("Y");
+l.add("E");
+l.add("S");
+Collections.sort(l, new MyCustomizedComparator());
+System.out.println(l);
+}
+}
+class MyCustomizedComparator implements Comparator {
+public int compare(Object o1, Object o2){
+String s1 = (String)o1;
+String s2 = (String)o2;
+return s2.compareTo(s1);
+}
+}
+[Y, S, K, E]
+
+# Searching elements of List:
+- Collections class defines the following binary search methods:
+public static int binarySearch(List l, Object target);
+  - If the List is sorted according to default natural sorting order then we have to use this method
+public static int binarySearch(List l, Object target, Comparator c);
+  - We have to use this method if the List is sorted according to customized sorting order
+
+Conclusions:
+- The above searching method internally will use binary search algorithm
+- successful search returns index 
+- unsuccessful search returns insertion point
+- insertion point is the location where we can place target elements in sorted list
+- before calling binary search method, the List should be sorted otherwise we will unpredictable results
+- If the List is sorted according to Comparator then at the time of search operation also we have to pass same Comparator object otherwise we will get unpredictable results
+
+e.g.
+import java.util.ArrayList;
+import java.util.Collections;
+
+class CollectionsSearchDemo{
+public static void main(String[] args){
+ArrayList l =  new ArrayList();
+l.add("Z");
+l.add("B");
+l.add("a");
+l.add("K");
+System.out.println(l);
+Collections.sort(l);
+System.out.println(l);
+System.out.println(Collections.binarySearch(l, "Z"));
+System.out.println(Collections.binarySearch(l, "J"));
+}
+}
+[Z, B, a, K]
+[B, K, Z, a]
+2
+-2
+
+e.g.
+class CollectionsSearchDemo2 {
+public static void main(String[] args) {
+ArrayList l = new ArrayList();
+l.add("Z");
+l.add("B");
+l.add("a");
+l.add("K");
+System.out.println(l);
+Collections.sort(l, new CollectionsSearchComparator());
+System.out.println(Collections.binarySearch(l, "Z", new CollectionsSearchComparator()));
+System.out.println(Collections.binarySearch(l, "J", new CollectionsSearchComparator()));
+}
+}
+class CollectionsSearchComparator implements Comparator {
+public int compare(Object o1, Object o2) {
+String s1 = (String) o1;
+String s2 = (String)o2;
+return s2.compareTo(s1);
+}
+}
+[Z, B, a, K]
+1
+-4
+
+# Note: 
+- For the List of n elements, in the case of binary search method:
+1. Successful search results range: 0 to n-1
+2. Unsuccessful search result range: (n+1) to -1
+3. Total result range: -(n+1) to n-1
+
+e.g.
+-1    -2    -3   -4
+ A     K     Z
+ 0     1     2
+
+Successful search result range: 0 10 2
+Unsuccessful Search result range: -4 to -1
+Total result range: -4 to 2
+
+# Reversing elements of List:
+- Collections class defines the following reverse() method to reverse elements of List  
+public static void reverse(List l);
+
+# reverse() vs reverseOrder():
+- We can use reverse() to reverse order of elements of List 
+- We can use reverseOrder() to get reverse Comparator.
+Comparator c = Collections.reverseOrder(Comparator c);
+        Descending order                Ascending order
+
+
+# Arrays:
+- Arrays class is a utility class to define several utility methods for Arrays
+
+# Sorting elements of Array:
+- Arrays class defines the following sort methods to sort elements of primitive and object type arrays
+public static void sort(primitive[] p);
+  - To sort according to Natural Sorting order
+public static void sort(Object[] o);
+  - To sort according to Natural sorting order
+public static void sort(Object[] o, Comparator c);
+  - To sort according to Customized sorting order
+
+# Note: We can sort primitive arrays only based on default natural sorting order whereas we can sort object arrays either based on default natural sorting order or based on customized sorting order.
+
+# Searching elements of Array:
+- Arrays class defines the following binary search methods:
+  public static int binarySearch(primitive[] p, primitive target);
+  public static int binarySearch(Object[] p, Object target);
+  public static int binarySearch(Object[] p, Object target, Comparator c);
+
+# All rules of Arrays class binary search method exactly same as Collections class binary search methods.
+
+# Conversion of Array to List:
+public static List asList(Object[] a);
+- This method won't create an independent List object
+- For the existing array we are getting List view.
+e.g.
+String[] s = {"A", "N", "D"};
+List l = Arrays.asList(s);
+
+- By using Array reference, if we perform any change automatically that change will be reflected to the List
+- Similarly, by using List reference if we perform any change, automatically that change will be reflected to the Array.
+- By using List reference, we can't perform any operation which varies the size otherwise we will get runtime exception UnsupportedOperationException
+- By using List reference, we can't replace with heterogeneous objects otherwise we will get RE: ArrayStoreException
+
+# Need of Concurrent Collection:
+- Tradition Collection Object (Like ArrayList, HashMap, etc.) can be accessed by multiple threads simultaneously and there may be chance of Data inconsistency problem and hence these are not thread safe
+- Already existing Thread safe Collections (Vector, Hashtable, synchronizedList()) performance wise not upto the mark 
+- Because for every operation only one thread can operate at a time which increases waiting time of threads
+- While one thread iterating Collection, the other Threads are not allowed to modify Collection object simultaneously if we are trying to modify then we will get ConcurrentModificationException
+- Hence, these Collection objects are not suitable for scalable Multi Threaded Applications
+- To overcome these problem, Concurrent Collection introduced in 1.5v.
+
+# Traditional Collection vs Concurrent Collection:
+- Concurrent Collections are always Thread Safe
+- When compared with Traditional Thread safe collections, Performance is high because of different Locking mechanism 
+- While one Thread interacting Collection the other Threads are allowed to modify Collection in safe manner
+
+the important Concurrent Classes are:
+1. ConcurrentHashMap
+2. CopyOnWriteArrayList
+3. CopyOnWriteArraySet
+
+# ConcurrentMap:
+Object putIfAbsent(Object key, Object value); --> To add Entry to the Map, if the specified key is not already available and if the key already available then entry won't be added and returns old associated value
+Object remove(Object key, Object value); --> Removes entry if the key associated with the specified value only
+Object replace(Object key, Object oldValue, Object newValue); --> If the value matches then only old value will be replaced with new value
+
+# ConcurrentHashMap:
+- Underlying data structure is Hashtable
+- ConcurrentHashMap allows concurrent read and thread safe operations
+- To perform read operation thread won't require any lock but to perform update operation thread requires lock. But it is lock of only one particular part of map (segment lock / Bucket level lock) instead of total map
+- Concurrent update achieved by internally dividing map into smaller portions, which is defined by Concurrency level
+- The default concurrency level is 16
+- CHM allows any number of read operations but by default 16 update operations at a time 
+- null is not allowed for both keys and values
+- While one thread is iterating, the other thread can perform update operation and CHM never throw ConcurrentModificationException
+
+Constructors:
+ConcurrentHashMap m = new ConcurrentHashMap();
+ConcurrentHashMap m = new ConcurrentHashMap(int initialCapacity);
+ConcurrentHashMap m = new ConcurrentHashMap(int initialCapacity, float fillRatio);
+ConcurrentHashMap m = new ConcurrentHashMap(int initialCapacity, float fillRatio, int concurrencyLevel);
+ConcurrentHashMap m = new ConcurrentHashMap(Map m);
+
+e.g.
+import java.util.concurrent.ConcurrentHashMap;
+
+class ConcurrentHashMapDemo {
+public static void main(String[] args) {
+ConcurrentHashMap m =  new ConcurrentHashMap();
+m.put(1, "A");
+m.put(2, "B");
+m.put(3, "C");
+m.putIfAbsent(4, "D");
+m.putIfAbsent(2, "E");
+m.replace(3, "C", "Z");
+System.out.println(m);
+}
+}
+{1=A, 2=B, 3=Z, 4=D}
+
+e.g.
+class ConcurrentHashMapDemo2 extends Thread {
+static ConcurrentHashMap m = new ConcurrentHashMap();
+public void run() {
+try {
+Thread.sleep(2000);
+} catch (InterruptedException e) {}
+System.out.println("Child Thread Updating Map");
+m.put(3, "C");
+}
+public static void main(String[] args) throws InterruptedException {
+m.put(1, "A");
+m.put(2, "B");
+ConcurrentHashMapDemo2 c = new ConcurrentHashMapDemo2();
+c.start();
+Set s = m.keySet();
+Iterator i = s.iterator();
+while (i.hasNext()) {
+Integer key = (Integer) i.next();
+System.out.println("Main thread iterating and current entry is: " + i + " " + m.get(i));
+Thread.sleep(2000);
+}
+System.out.println(m);
+}
+}
+Main thread iterating and current entry is: java.util.concurrent.ConcurrentHashMap$KeyIterator@2f92e0f4 null
+Child Thread Updating Map
+Main thread iterating and current entry is: java.util.concurrent.ConcurrentHashMap$KeyIterator@2f92e0f4 null
+{1=A, 2=B, 3=C}
+
+# HashMap                                                                           ConcurrentHashMap:
+-----------------------------------------------------------------------------------------------------------------------------------------
+1. It is not Thread safe                                                            It is Thread safe
+2. Relatively performance is high because Threads are not required to wait to       Relatively performance is low because threads are required to wait to operate on ConcurrentHashMap
+operate on HashMap
+3. While one thread iterating HashMap, the other threads are not allowed to         While one thread iterating ConcurrentHashMap, other threads are allowed to modify map Objects in safe manner and won't throw ConcurrentModificationException
+modify Map Objects otherwise we will get RE: ConcurrentModificationException
+4. Iterator of HashMap is Fail-Fast, and it throws ConcurrentModificationException   Iterator of ConcurrentHashMap is Fail-Safe, and it won't throw ConcurrentModificationException
+
+![img_2.png](img_2.png)
+
+# CopyOnWriteArrayList:
+- It is a Thread safe version of ArrayList.
+- creates a cloned copy of underlying ArrayList for every update operation at certain point both synchronized automatically which is taken care by JVM internally
+
+CopyOnWriteArrayList l = new CopyOnWriteArrayList();
+CopyOnWriteArrayList l = new CopyOnWriteArrayList(Collection c);
+CopyOnWriteArrayList l = new CopyOnWriteArrayList(Object[] a);
+
+methods:
+boolean addIfAbsent(Object o);
+int addAllAbsent(Collection c);
+
+- If we replace CopyOnWriteArrayList with ArrayList then we will get ConcurrentModificationException
+- Iterator of CopyOnWriteArrayList can't perform remove operation otherwise we will get RE: UnsupportedOperationException
+![img_3.png](img_3.png)
